@@ -33,7 +33,26 @@ usuario* crear_usuario(char *x){
     strcpy(user->nombre,x);
     user->valoracionLecturas=createList();
 }
-
+texto* crear_texto (char*titulo,float valoracion, char*autor,List*genero,char*sinopsis){
+    texto *text = (texto *) malloc (sizeof(texto));
+    text->genero=createList();
+    text->autor=(char *)malloc(20*sizeof(char));
+    text->titulo=(char *)malloc(20*sizeof(char));
+    text->sinopsis=(char *)malloc(10000*sizeof(char));
+    char *auxGen;
+    
+    strcpy(text->titulo,titulo);
+    strcpy(text->autor,autor);
+    strcpy(text->sinopsis,sinopsis);
+    text->valoracion=valoracion;
+    strcpy(auxGen,first(genero));
+    while (auxGen!=NULL)
+    {
+        pushBack(text->genero,auxGen);
+        strcpy(auxGen,next(genero));
+    }
+    return text;
+}
 vLector* crear_valoracion(char*a, char*b,char*c,int d){
     vLector *val = (vLector *) malloc (sizeof(vLector));
     val->tipoLectura=(char *)malloc(20*sizeof(char));

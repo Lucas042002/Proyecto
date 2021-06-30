@@ -5,6 +5,7 @@
 #define funcionesUsuario_h
 
 void crearUsuario(FILE*texto);
-void ingresarUsuario(FILE*texto,usuario*user);
+int ingresarUsuario(FILE*texto,usuario*user);
+void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero);
 
 #endif /* funcionesUsuario_h */
