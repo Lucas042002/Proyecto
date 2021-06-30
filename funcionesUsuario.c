@@ -147,25 +147,27 @@ int ingresarUsuario(FILE*texto,usuario*user){
 void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero){
     FILE * txt;
     int opcion;
-    printf ("Que recomendaciones deseeas ver en esta sesion:");
+    printf ("Que recomendaciones deseeas ver en esta sesion:\n");
     printf("1.- Mangas\n");
     printf("2.- Libros\n");
     printf("3.- Comics\n");
     scanf ("%d",&opcion);
-    switch(opcion){
-        case 1: txt = fopen ("mangas.csv", "r"); break;
-        case 2: txt = fopen ("libros.csv", "r"); break;
-        case 3: txt = fopen ("comics.csv", "r"); break;
-        default: printf("Opcion no valida.\n"); break;
-    }
+    if (opcion == 1) txt = fopen ("mangas.csv", "r");
+    if (opcion == 2) txt = fopen ("libros.csv", "r");
+    if (opcion == 3) txt = fopen ("comics.csv", "r");
+    
     //system("pause");
     //system("@cls||clear");
     char *linea,*ptr;
 
     int n = 0;
     while (!feof(txt) ){
-        linea = (char *) calloc(10000, sizeof(char));
-        fgets(linea, 10000, txt);
+        printf ("gksdhbsdabjhbkjjbhasdf\n");
+        linea = (char *) malloc(1000*sizeof(char));
+        
+        fgets(linea, 1000, txt);
+        printf ("linea=%s\n",linea);
+        /*
         if( linea ){
             texto * auxTexto;
             char * titulo = (char *)malloc(sizeof(char));
@@ -173,11 +175,14 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
             char * sinopsis = (char *)malloc(10000*sizeof(char));
             char * auxGenero = (char *)malloc(sizeof(char));
             List * genero=createList();
+            printf ("gksdhbsdabjhbkjjbhasdf\n");
+
             float valoracion;
             ptr = strtok(linea, ",");
             ptr = strtok(NULL, ",");
             if( ptr ){
                 strcpy(titulo,ptr);
+                printf ("%s\n",titulo);
                 ptr = strtok(NULL, ",");
 
                 if (ptr[0]=='\"'){
@@ -199,14 +204,29 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
                             strcat(sinopsis, ptr);
                         }
                 }
-                auxTexto = crear_texto();
+                auxTexto = crear_texto(titulo,valoracion, autor, genero, sinopsis);
+                List* auxAutor = createList();
                 insertMap (Map_titulo,titulo,auxTexto);
+                if (get_size(Map_autor)==0)  {
+                    pushBack(auxAutor, auxTexto);
+                    insertMap(Map_autor, autor, auxAutor);
+                }
+                else{
+                    if (searchMap(Map_autor, autor)!=NULL){
+                        auxAutor=searchMap(Map_autor, autor);
+                        eraseMap(Map_autor,autor);
+                        pushBack(auxAutor, auxTexto);
+                        insertMap(Map_autor, autor, auxAutor);
+                    }
+                    else{
 
-                
-                
+                        pushBack(auxAutor, auxTexto);
+                        insertMap(Map_autor, autor, auxAutor);
+                    }
+                }   
 
             }
-        }
+        }*/
     }
 }
 
