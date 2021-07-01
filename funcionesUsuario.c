@@ -18,15 +18,16 @@ int get_file_size (FILE *fp) {
    fclose(fp);
    return(len);
 }
-void cargarDatosUsuario(char*name,char*copyLinea,usuario*user){
+usuario *cargarDatosUsuario(char*name,char*copyLinea,usuario*user){
     char *ptr, *ptr2;
     char*nombre=(char*)malloc(sizeof(char));
     strcpy(nombre,name);
     user = crear_usuario(nombre);
+    if(user==NULL) printf("aaaaaaaaaaaa\n");
     ptr = strtok(copyLinea, ";");
     ptr = strtok(NULL, "\n");
     
-    if (ptr==NULL) return;
+    if (ptr==NULL) return NULL;
     else{
         vLector*val;
         char*tipoLectura=(char *)malloc(20*sizeof(char));
@@ -51,12 +52,13 @@ void cargarDatosUsuario(char*name,char*copyLinea,usuario*user){
             ptr2=strtok(NULL,",");
             strcpy(genero,ptr2);
             ptr2=strtok(NULL,",");
-            calificacion=atoi(ptr2);
+            calificacion=atof(ptr2);
             val=crear_valoracion(tipoLectura,titulo,genero,calificacion);
             agregar_lista(user,val);
             ptr2=strtok(NULL,",");
         }
     }
+    return user;
 }
 void crearUsuario(FILE*texto){
     char*nombre_usuario=(char *)malloc(20*sizeof(char));
@@ -103,8 +105,8 @@ void crearUsuario(FILE*texto){
     
 }
 usuario* ingresarUsuario(FILE*texto,usuario*user){
-    char*nombre_usuario=(char *)malloc(20*sizeof(char));
-    char*contrasena=(char *)malloc(20*sizeof(char));
+    char*nombre_usuario=(char *)malloc(45*sizeof(char));
+    char*contrasena=(char *)malloc(45*sizeof(char));
     int intento=0;
 
     printf("Ingrese nombre de usuario:\n");
@@ -134,7 +136,7 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
                             cargarDatosUsuario(nombre_usuario,copyLinea,user);
                             fclose(texto);
                             free(linea);
-                            return user;
+                            return (usuario*)nombre_usuario;
                         }
                         intento++;
                     }
@@ -142,7 +144,7 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
                 }
             }
         }
-        printf ("No se encontro el usuario.");
+        printf ("No se encontro el usuario.\n");
         fclose(texto);
     }
     free(linea);
@@ -173,7 +175,7 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
             char * autor     = (char *)calloc(1000,sizeof(char));
             char * sinopsis  = (char *)calloc(10000,sizeof(char));
             char * auxGenero = (char *)calloc(1000,sizeof(char));
-
+            
             float valoracion;
             ptr = strtok(linea, ",");
 

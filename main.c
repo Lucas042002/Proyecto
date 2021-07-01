@@ -61,7 +61,7 @@ int main (){
         printf("            Inicio de sesion\n");
         printf("-----------------------------------------\n");
         printf("1.- Crear usuario\n");
-        printf("2.- Ingresar usuario\n");
+        printf("2.- Ingresar usuario\n");~
         printf("0.- Salir\n");
         printf("\n");
         printf("Indica la opcion: ");
@@ -74,7 +74,7 @@ int main (){
             case 1: crearUsuario(texto); break;
             case 2: {
                 user = ingresarUsuario(texto,user); 
-                if (user==NULL) menuRecomendacion (user);
+                if (user!=NULL) menuRecomendacion (user);
                 break;
             }
             case 0: break;

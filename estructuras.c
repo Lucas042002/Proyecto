@@ -29,8 +29,8 @@ struct vLector{
 };
 
 usuario* crear_usuario(char *x){
-    usuario *user = (usuario *) malloc (sizeof(usuario));
-    strcpy(user->nombre,x);
+    usuario *user = (usuario *) calloc(1,sizeof(usuario));
+    user->nombre=x;
     user->valoracionLecturas=createList();
     return user;
 }
