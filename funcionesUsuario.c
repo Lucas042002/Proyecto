@@ -156,27 +156,18 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
     printf("2.- Libros\n");
     printf("3.- Comics\n");
     scanf ("%d",&opcion);
-    //if (opcion == 1) txt = fopen ("mangas.csv", "r");
-    //if (opcion == 2) txt = fopen ("libros.csv", "r");
-    //if (opcion == 3) txt = fopen ("comics.csv", "r");
+    if (opcion == 1) fp = fopen ("mangas.csv", "r");
+    if (opcion == 2) fp = fopen ("libros.csv", "r");
+    if (opcion == 3) fp = fopen ("comics.csv", "r");
 
-    fp = fopen ("mangas.csv", "r");
-    
+
     //system("pause");
     //system("@cls||clear");
     char *linea,*ptr;
-    printf ("gksdhbsdabjhbkjjbhasdf\n");
-    linea = (char *) calloc(10000,sizeof(char));
-    fgets(linea, 10000, fp);
-    printf ("linea=%s\n",linea);
-    /*
-    while (!feof(txt) ){
-        printf ("gksdhbsdabjhbkjjbhasdf\n");
-        linea = (char *) malloc(5000*sizeof(char));
-        
-        fgets(linea, 5000, txt);
-        printf ("linea=%s\n",linea);
-        
+    
+    while (!feof(fp) ){
+        linea = (char *) calloc(10000,sizeof(char));
+        fgets(linea, 10000, fp);
         if( linea ){
             texto * auxTexto;
             char * titulo = (char *)malloc(sizeof(char));
@@ -184,35 +175,32 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
             char * sinopsis = (char *)malloc(10000*sizeof(char));
             char * auxGenero = (char *)malloc(sizeof(char));
             List * genero=createList();
-            printf ("gksdhbsdabjhbkjjbhasdf\n");
 
             float valoracion;
             ptr = strtok(linea, ",");
-            ptr = strtok(NULL, ",");
+            //ptr = strtok(NULL, ",");
+            //printf ("%s\n",ptr);
             if( ptr ){
                 strcpy(titulo,ptr);
                 printf ("%s\n",titulo);
-                ptr = strtok(NULL, ",");
+                
+                ptr = strtok(NULL, "\"");
+                strcpy(auxGenero, ptr);
+                printf ("%s\n",auxGenero);
 
-                if (ptr[0]=='\"'){
-                        strcpy(auxGenero, ptr);
-                        while(ptr[strlen(ptr)-1]!='\"'){
-                            ptr=strtok(NULL, ",");
-                            strcpy(auxGenero, ptr);
-                            pushBack(genero,auxGenero);
-                        }
-                }
                 ptr = strtok(NULL, ",");
                 strcpy(autor,ptr);
+                printf ("%s\n",autor);
+
                 ptr = strtok(NULL, ",");
                 valoracion = atoi(ptr);
-                if (ptr[0]=='\"'){
-                        strcpy(sinopsis, ptr);
-                        while(ptr[strlen(ptr)-1]!='\"'){
-                            ptr=strtok(NULL, ",");
-                            strcat(sinopsis, ptr);
-                        }
-                }
+                printf ("%.2f\n",valoracion);
+
+                ptr = strtok(NULL, "\"");
+                strcpy(sinopsis, ptr);
+                printf ("%s\n",sinopsis);
+                
+                //esto se segmenta
                 auxTexto = crear_texto(titulo,valoracion, autor, genero, sinopsis);
                 List* auxAutor = createList();
                 insertMap (Map_titulo,titulo,auxTexto);
@@ -236,7 +224,7 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
 
             }
         }
-    }*/
+    }
 }
 
 
