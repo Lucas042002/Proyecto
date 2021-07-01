@@ -13,7 +13,8 @@ void menuRecomendacion(usuario*user){
     HashMap*Map_titulo=createMap(100);
     HashMap*Map_autor=createMap(50);
     HashMap*Map_genero=createMap(50);
-
+    mostrarUser(user);
+    mostrarVal(user);
     importarTipoLectura(Map_titulo,Map_autor,Map_genero);
 
     int numero = -1;
@@ -55,6 +56,7 @@ int main (){
     FILE * texto = fopen ("usuarios.csv", "r");
     int numero = -1;
     usuario*user=NULL;
+    //char*nombre;
     while(numero != 0){
         
         printf("-----------------------------------------\n");
@@ -72,9 +74,13 @@ int main (){
 
         switch(numero){
             case 1: crearUsuario(texto); break;
-            case 2: {
-                user = ingresarUsuario(texto,user); 
-                if (user!=NULL) menuRecomendacion (user);
+            case 2:{
+                user = ingresarUsuario(texto,user);
+                mostrarUser(user); 
+                if (user!=NULL) {
+                    menuRecomendacion (user);
+                    return 0;
+                }
                 break;
             }
             case 0: break;

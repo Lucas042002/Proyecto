@@ -14,7 +14,7 @@ struct texto{
     char * titulo;
     float valoracion;
     char * autor;
-    List* genero;
+    char* genero;
     char * sinopsis;
 };
 struct usuario{
@@ -34,24 +34,19 @@ usuario* crear_usuario(char *x){
     user->valoracionLecturas=createList();
     return user;
 }
-texto* crear_texto (char*titulo,float valoracion, char*autor,List*genero,char*sinopsis){
+texto* crear_texto (char*titulo,float valoracion, char*autor,char*genero,char*sinopsis){
     texto *text = (texto *) malloc (sizeof(texto));
-    text->genero=createList();
+    text->genero=(char *)malloc(50*sizeof(char));
     text->autor=(char *)malloc(20*sizeof(char));
     text->titulo=(char *)malloc(20*sizeof(char));
     text->sinopsis=(char *)malloc(10000*sizeof(char));
-    char *auxGen=(char *)malloc(20*sizeof(char));
     
     strcpy(text->titulo,titulo);
     strcpy(text->autor,autor);
     strcpy(text->sinopsis,sinopsis);
     text->valoracion=valoracion;
-    strcpy(auxGen,first(genero));
-    while (auxGen!=NULL)
-    {
-        pushBack(text->genero,auxGen);
-        strcpy(auxGen,next(genero));
-    }
+    strcpy(text->genero,genero);
+
     return text;
 }
 vLector* crear_valoracion(char*a, char*b,char*c,int d){
@@ -69,4 +64,20 @@ vLector* crear_valoracion(char*a, char*b,char*c,int d){
 
 void agregar_lista (usuario*user, vLector*val){
     pushBack(user->valoracionLecturas, val);
+}
+
+void mostrarUser(usuario *user){
+    printf("nombre = %s\n", user->nombre);
+}
+void mostrarVal(usuario *user){
+    vLector*aux=malloc(sizeof(vLector));
+    aux=first(user->valoracionLecturas);
+    while(aux!=NULL){
+        printf("%s\n", aux->tipoLectura);
+        printf("%s\n", aux->titulo);
+        printf("%s\n", aux->genero);
+        printf("%.2f\n", aux->calificacion);
+        aux=next(user->valoracionLecturas);
+    }
+
 }

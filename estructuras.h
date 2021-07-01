@@ -12,6 +12,7 @@ typedef struct vLector vLector;
 usuario* crear_usuario(char *x);
 vLector* crear_valoracion(char*a, char*b,char*c,int d);
 void agregar_lista (usuario*user, vLector*val);
-texto* crear_texto (char*titulo,float valoracion, char*autor,List*genero,char*sinopsis);
-
+texto* crear_texto (char*titulo,float valoracion, char*autor,char*genero,char*sinopsis);
+void mostrarUser(usuario *user);
+void mostrarVal(usuario *user);
 #endif /* estructuras_h */
