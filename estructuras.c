@@ -32,6 +32,7 @@ usuario* crear_usuario(char *x){
     usuario *user = (usuario *) malloc (sizeof(usuario));
     strcpy(user->nombre,x);
     user->valoracionLecturas=createList();
+    return user;
 }
 texto* crear_texto (char*titulo,float valoracion, char*autor,List*genero,char*sinopsis){
     texto *text = (texto *) malloc (sizeof(texto));
@@ -39,7 +40,7 @@ texto* crear_texto (char*titulo,float valoracion, char*autor,List*genero,char*si
     text->autor=(char *)malloc(20*sizeof(char));
     text->titulo=(char *)malloc(20*sizeof(char));
     text->sinopsis=(char *)malloc(10000*sizeof(char));
-    char *auxGen;
+    char *auxGen=(char *)malloc(20*sizeof(char));
     
     strcpy(text->titulo,titulo);
     strcpy(text->autor,autor);

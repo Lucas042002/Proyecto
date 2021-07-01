@@ -85,8 +85,8 @@ void crearUsuario(FILE*texto){
     else{
         texto = fopen("usuarios.csv", "r");
         while (!feof(texto)){
-            linea = (char *) malloc(10000*sizeof(char));
-            fgets(linea, 10000, texto);
+            linea = (char *) malloc(5000*sizeof(char));
+            fgets(linea, 5000, texto);
             if(linea){
                 ptr = strtok(linea, ",");
                 if (strcmp(nombre_usuario,ptr)==0){
@@ -102,7 +102,7 @@ void crearUsuario(FILE*texto){
     }
     
 }
-int ingresarUsuario(FILE*texto,usuario*user){
+usuario* ingresarUsuario(FILE*texto,usuario*user){
     char*nombre_usuario=(char *)malloc(20*sizeof(char));
     char*contrasena=(char *)malloc(20*sizeof(char));
     int intento=0;
@@ -119,9 +119,9 @@ int ingresarUsuario(FILE*texto,usuario*user){
     else{
         texto = fopen("usuarios.csv", "r");
         while (!feof(texto)){
-            linea = (char *) malloc(10000*sizeof(char));
-            fgets(linea, 10000, texto);
-            char*copyLinea=(char *) malloc(10000*sizeof(char));
+            linea = (char *) malloc(5000*sizeof(char));
+            fgets(linea, 5000, texto);
+            char*copyLinea=(char *) malloc(5000*sizeof(char));
             strcpy(copyLinea,linea);
             if(linea){
                 ptr = strtok(linea, ",");
@@ -132,42 +132,51 @@ int ingresarUsuario(FILE*texto,usuario*user){
                         scanf ("%s", contrasena);
                         if (strcmp(contrasena,ptr)==0){
                             cargarDatosUsuario(nombre_usuario,copyLinea,user);
-                            return 0;
+                            fclose(texto);
+                            free(linea);
+                            return user;
                         }
                         intento++;
                     }
                     if (intento==3) printf ("Limite de intentos superado, se volvera al menu principal.\n");
-                    return 1;
                 }
             }
         }
         printf ("No se encontro el usuario.");
+        fclose(texto);
     }
+    free(linea);
+    return user;
 }
 void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero){
-    FILE * txt;
+    FILE * fp;
     int opcion;
     printf ("Que recomendaciones deseeas ver en esta sesion:\n");
     printf("1.- Mangas\n");
     printf("2.- Libros\n");
     printf("3.- Comics\n");
     scanf ("%d",&opcion);
-    if (opcion == 1) txt = fopen ("mangas.csv", "r");
-    if (opcion == 2) txt = fopen ("libros.csv", "r");
-    if (opcion == 3) txt = fopen ("comics.csv", "r");
+    //if (opcion == 1) txt = fopen ("mangas.csv", "r");
+    //if (opcion == 2) txt = fopen ("libros.csv", "r");
+    //if (opcion == 3) txt = fopen ("comics.csv", "r");
+
+    fp = fopen ("mangas.csv", "r");
     
     //system("pause");
     //system("@cls||clear");
     char *linea,*ptr;
-
-    int n = 0;
+    printf ("gksdhbsdabjhbkjjbhasdf\n");
+    linea = (char *) calloc(10000,sizeof(char));
+    fgets(linea, 10000, fp);
+    printf ("linea=%s\n",linea);
+    /*
     while (!feof(txt) ){
         printf ("gksdhbsdabjhbkjjbhasdf\n");
-        linea = (char *) malloc(1000*sizeof(char));
+        linea = (char *) malloc(5000*sizeof(char));
         
-        fgets(linea, 1000, txt);
+        fgets(linea, 5000, txt);
         printf ("linea=%s\n",linea);
-        /*
+        
         if( linea ){
             texto * auxTexto;
             char * titulo = (char *)malloc(sizeof(char));
@@ -226,8 +235,8 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
                 }   
 
             }
-        }*/
-    }
+        }
+    }*/
 }
 
 

@@ -16,7 +16,7 @@ void menuRecomendacion(usuario*user){
 
     importarTipoLectura(Map_titulo,Map_autor,Map_genero);
 
-    int cont = 0, numero = -1;
+    int numero = -1;
     while(numero != 0){
         printf("-----------------------------------------\n");
         printf("                MENU\n");
@@ -53,9 +53,8 @@ void menuRecomendacion(usuario*user){
 
 int main (){
     FILE * texto = fopen ("usuarios.csv", "r");
-    int cont = 0, aux = 0;
     int numero = -1;
-    usuario*user;
+    usuario*user=NULL;
     while(numero != 0){
         
         printf("-----------------------------------------\n");
@@ -74,8 +73,8 @@ int main (){
         switch(numero){
             case 1: crearUsuario(texto); break;
             case 2: {
-                aux = ingresarUsuario(texto,user); 
-                if (aux==0) menuRecomendacion (user);
+                user = ingresarUsuario(texto,user); 
+                if (user==NULL) menuRecomendacion (user);
                 break;
             }
             case 0: break;
