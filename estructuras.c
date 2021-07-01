@@ -81,3 +81,19 @@ void mostrarVal(usuario *user){
     }
 
 }
+
+char* get_titulo(texto*t){
+    return(t->titulo);
+}
+float get_valoracion(texto*t){
+   return (t->valoracion);
+}
+char* get_autor(texto*t){
+    return(t->autor);
+}
+char* get_genero(texto*t){
+    return(t->genero);
+}
+char* get_sinopsis(texto*t){
+    return(t->sinopsis);
+}

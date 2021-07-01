@@ -7,7 +7,7 @@
 #include "list.h"
 #include "estructuras.h"
 #include "funcionesUsuario.h"
-
+#include "funcionesMenu2.h"
 
 void menuRecomendacion(usuario*user){
     HashMap*Map_titulo=createMap(100);
@@ -39,7 +39,7 @@ void menuRecomendacion(usuario*user){
             case 1: break;
             case 2: break;
             case 3: break;
-            case 4: break;
+            case 4: Buscar_Titulo(Map_titulo);break;
             case 5: break;
             case 6: break;
             case 7: break;

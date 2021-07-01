@@ -15,4 +15,11 @@ void agregar_lista (usuario*user, vLector*val);
 texto* crear_texto (char*titulo,float valoracion, char*autor,char*genero,char*sinopsis);
 void mostrarUser(usuario *user);
 void mostrarVal(usuario *user);
+
+char* get_titulo(texto*t);
+float get_valoracion(texto*t);
+char* get_autor(texto*t);
+char* get_genero(texto*t);
+char* get_sinopsis(texto*t);
+
 #endif /* estructuras_h */
