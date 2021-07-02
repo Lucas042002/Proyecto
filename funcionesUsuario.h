@@ -6,6 +6,6 @@
 
 void crearUsuario(FILE*texto);
 usuario* ingresarUsuario(FILE*texto,usuario*user);
-void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero);
+char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero);
 
 #endif /* funcionesUsuario_h */

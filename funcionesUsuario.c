@@ -36,10 +36,10 @@ void cargarDatosUsuario(char*copyLinea,usuario*user){
         strcpy(tipoLectura,ptr2);
         ptr2=strtok(NULL,",");
         strcpy(titulo,ptr2);
-        ptr2=strtok(NULL,",");
+        ptr2=strtok(NULL,"\"");
         strcpy(genero,ptr2);
         ptr2=strtok(NULL,",");
-        calificacion=atoi(ptr2);
+        calificacion=atof(ptr2);
         val=crear_valoracion(tipoLectura,titulo,genero,calificacion);
         agregar_lista(user,val);
         ptr2=strtok(NULL,",");
@@ -47,7 +47,7 @@ void cargarDatosUsuario(char*copyLinea,usuario*user){
             strcpy(tipoLectura,ptr2);
             ptr2=strtok(NULL,",");
             strcpy(titulo,ptr2);
-            ptr2=strtok(NULL,",");
+            ptr2=strtok(NULL,"\"");
             strcpy(genero,ptr2);
             ptr2=strtok(NULL,",");
             calificacion=atof(ptr2);
@@ -149,7 +149,7 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
     free(linea);
     return NULL;
 }
-void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero){
+char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero){
     FILE * fp;
     int opcion;
     printf ("Que recomendaciones deseeas ver en esta sesion:\n");
@@ -199,6 +199,7 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
                 auxTexto = crear_texto(titulo,valoracion, autor, genero, sinopsis);
                 //insercion en mapa titulo
                 insertMap (Map_titulo,titulo,auxTexto);
+                insertMap(Map_genero,genero,auxTexto);
                 //en caso de repeticion de autor
                 List* auxAutor = createList();
                 if (get_size(Map_autor)==0)  {
@@ -218,7 +219,7 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
                     }
                 }
                 //en caso de repeticion de genero
-                List* auxGenero=createList();  
+                /*List* auxGenero=createList();  
                 if (get_size(Map_genero)==0) {
                     pushBack(auxGenero, auxGenero);
                     insertMap(Map_genero, genero, auxGenero);
@@ -235,10 +236,13 @@ void importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_genero
                         insertMap(Map_genero, genero, auxGenero);
                     }
                 }   
-                
+               */ 
             }
         }
     }
+    if (opcion==1) return "Mangas";
+    if (opcion==2) return "Libros";
+    if (opcion==3) return "Comics";
 }
 
 

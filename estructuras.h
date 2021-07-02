@@ -24,4 +24,10 @@ char* get_sinopsis(texto*t);
 long get_size (HashMap * map);
 void mostrarPorValoracion(HashMap*Map_titulo);
 int comparar(texto* aComparar, char *aux);
+
+char* get_tituloL(vLector*t);
+List* get_valoracionL(usuario * user);
+char* get_generoL(vLector*t);
+char* get_TipoL(vLector*t);
+float  get_calificacion(vLector *t);
 #endif /* estructuras_h */

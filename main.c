@@ -15,8 +15,8 @@ void menuRecomendacion(usuario*user){
     HashMap*Map_genero=createMap(50);
     mostrarUser(user);
     mostrarVal(user);
-    importarTipoLectura(Map_titulo,Map_autor,Map_genero);
-
+    char* tipoLec = malloc (sizeof(char));
+    tipoLec = importarTipoLectura(Map_titulo,Map_autor,Map_genero);
     int numero = -1;
     while(numero != 0){
         printf("-----------------------------------------\n");
@@ -37,10 +37,10 @@ void menuRecomendacion(usuario*user){
 
         switch(numero){
             case 1: break;
-            case 2: break;
+            case 2: mostrar_afinidad(Map_genero,user,Map_titulo,tipoLec);break;
             case 3: mostrarPorValoracion(Map_titulo);break;
             case 4: Buscar_Titulo(Map_titulo);break;
-            case 5: buscar_autor(Map_autor);break;
+            case 5: buscar_autor(Map_titulo,Map_autor);break;
             case 6: break;
             case 7: break;
             case 0: break;

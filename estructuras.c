@@ -135,3 +135,19 @@ int comparar(texto* aComparar, char *aux){
   }
   return 0;
 }
+
+char* get_tituloL(vLector*t){
+    return(t->titulo);
+}
+List* get_valoracionL(usuario * user){
+   return (user->valoracionLecturas);
+}
+char* get_generoL(vLector*t){
+    return(t->genero);
+}
+char* get_TipoL(vLector*t){
+    return(t->tipoLectura);
+}
+float  get_calificacion(vLector *t){
+    return (t->calificacion);
+}
