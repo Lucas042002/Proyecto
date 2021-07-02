@@ -157,3 +157,6 @@ char* get_key(HashMap *map){
     return map->buckets[map->current]->key;
 }
 
+long get_size (HashMap * map){
+  return map->size;
+} 

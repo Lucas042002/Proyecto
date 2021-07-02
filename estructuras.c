@@ -4,6 +4,7 @@
 #include <math.h>
 #include <ctype.h>
 #include "list.h"
+#include "map.h"
 #include "estructuras.h"
 
 typedef struct texto texto;
@@ -96,4 +97,41 @@ char* get_genero(texto*t){
 }
 char* get_sinopsis(texto*t){
     return(t->sinopsis);
+}
+
+void mostrarPorValoracion(HashMap *map){
+  texto *vector = malloc(sizeof(texto)*get_size(map));
+  texto *vectorMapa = firstMap(map);
+  int cont = 0;
+  while (vectorMapa != NULL){
+    vector[cont] = *vectorMapa;
+    cont++;
+    vectorMapa = nextMap(map);
+  }
+  texto swap;
+    for (int c = 0 ; c < get_size(map) -1; c++){
+        for (int d = 0 ; d < get_size(map)- c-1; d++){
+            if (vector[d].valoracion < vector[d+1].valoracion){
+                swap       = vector[d];
+                vector[d]   = vector[d+1];
+                vector[d+1] = swap;   
+            }
+        }
+    }
+    for(int l=0;l<cont;l++){
+         printf ("%.2f\t\t%s\n",vector[l].valoracion, vector[l].titulo);
+    }
+
+}
+
+int comparar(texto* aComparar, char *aux){
+  int largo = strlen (aux);
+  int i=largo-1;
+  while (i>0){
+    if (aComparar->autor[i]!=aux[i]){
+      return 1;
+    }
+    i--;
+  }
+  return 0;
 }

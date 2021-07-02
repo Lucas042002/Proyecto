@@ -15,7 +15,7 @@ struct List{
     int size;
 };
 
-int get_size(List* list){
+int get_sizelist(List* list){
     return list->size;
 }
 

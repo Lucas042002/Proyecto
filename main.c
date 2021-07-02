@@ -38,13 +38,11 @@ void menuRecomendacion(usuario*user){
         switch(numero){
             case 1: break;
             case 2: break;
-            case 3: break;
+            case 3: mostrarPorValoracion(Map_titulo);break;
             case 4: Buscar_Titulo(Map_titulo);break;
-            case 5: break;
+            case 5: buscar_autor(Map_autor);break;
             case 6: break;
             case 7: break;
-            case 8: break;
-            case 9: break;
             case 0: break;
             default: printf("Opcion no valida.\n"); break;
         }

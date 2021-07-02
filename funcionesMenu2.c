@@ -39,3 +39,37 @@ void Buscar_Titulo(HashMap*map){
     }
 
 }
+void buscar_autor(HashMap*map){
+    char*autor=malloc(sizeof(char));
+    texto*auxautor;
+    printf("Que autor deseas buscar?\n");
+    scanf("%[^\n]", autor);
+    fgets(autor,40,stdin);
+    fgets(autor,40,stdin);
+    autor[strlen(autor)-1]=0;
+    //auxautor=searchMap(map,autor);
+    if(searchMap(map,autor)==NULL){
+        printf("El autor ingresado no se encuentra en nuestra base de datos\n");
+        return;
+    }
+    auxautor=searchMap(map,autor);
+    printf("aaaa\n");
+    while(auxautor!=NULL){
+        printf("a2\n");
+        printf("%s", get_autor(auxautor));
+        //printf("%s", autor);
+        if(comparar(auxautor,autor)==0){
+            printf("a3\n");
+            printf("Titulo de la obra: ");
+            printf("%s", get_titulo(auxautor));
+            printf("\n");
+            printf("Genero(s) de la obra: ");
+            printf("%s", get_genero(auxautor));
+            printf("\n");
+            printf("Valoracion de la obra: ");
+            printf("%.2f", get_valoracion(auxautor)); 
+            printf("\n");
+        }
+    auxautor=nextMap(map);
+    }
+}
