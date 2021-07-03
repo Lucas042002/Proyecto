@@ -261,19 +261,81 @@ void mostrar_genero(HashMap*Map_genero){
             new=nextMap(Map_genero);
         }
     }
+    printf("Como desea ver las lecturas?\n");
+    printf("1 para mostrar de mayor a menor valoracion.\n");
+    printf("2 para mostrar de menor a mayor valoracion.\n");
+    printf("3 para no ordenar.\n");
+    int opcion;
+    do{ 
+        scanf("%d", &opcion);
+    }while(opcion!=1 && opcion!=2 && opcion!=3);
     texto *swap;
-    for (int c = 0 ; c < control -1; c++){
-        for (int d = 0 ; d < control- c-1; d++){
-            if (get_valoracion(vector2[d]) < get_valoracion(vector2[d+1])){
-                swap       = vector2[d];
-                vector2[d]   = vector2[d+1];
-                vector2[d+1] = swap;   
+    //mayor a menor
+    if(opcion==1){
+        for (int c = 0 ; c < control -1; c++){
+            for (int d = 0 ; d < control- c-1; d++){
+                if (get_valoracion(vector2[d]) < get_valoracion(vector2[d+1])){
+                    swap       = vector2[d];
+                    vector2[d]   = vector2[d+1];
+                    vector2[d+1] = swap;   
+                }
             }
         }
     }
-
+    //menor a mayor
+    if(opcion==2){
+        for (int c = 0 ; c < control -1; c++){
+            for (int d = 0 ; d < control- c-1; d++){
+                if (get_valoracion(vector2[d]) > get_valoracion(vector2[d+1])){
+                    swap       = vector2[d];
+                    vector2[d]   = vector2[d+1];
+                    vector2[d+1] = swap;   
+                }
+            }
+        }
+    }
     for (int j=0; j<control; j++){
-        printf("%s\t%.2f \n",get_titulo(vector2[j]), get_valoracion(vector2[j]));
+        printf("%s",get_titulo(vector2[j]));
+            for (int k=0; k<27-strlen(get_titulo(vector2[j])); k++){
+            printf(" ");
+        }
+        printf("%.2f \n",get_valoracion(vector2[j]));
     }
     
+}
+
+void agregarTexto(HashMap *Map_genero, HashMap* Map_autor, HashMap *Map_titulo, char*tipo){
+            char * titulo    = (char *)calloc(1000,sizeof(char));
+            char * autor     = (char *)calloc(1000,sizeof(char));
+            char * sinopsis  = (char *)calloc(10000,sizeof(char));
+            char * genero    = (char *)calloc(1000,sizeof(char));
+            
+            float valoracion;
+
+            /*
+                
+                auxTexto = crear_texto(titulo,valoracion, autor, genero, sinopsis);
+                //insercion en mapa titulo
+                insertMap (Map_titulo,titulo,auxTexto);
+                insertMap(Map_genero,genero,auxTexto);
+                //en caso de repeticion de autor
+                List* auxAutor = createList();
+                if (get_size(Map_autor)==0)  {
+                    pushBack(auxAutor, auxTexto);
+                    insertMap(Map_autor, autor, auxAutor);
+                }
+                else{
+                    if (searchMap(Map_autor, autor)!=NULL){
+                        auxAutor=searchMap(Map_autor, autor);
+                        eraseMap(Map_autor,autor);
+                        pushBack(auxAutor, auxTexto);
+                        insertMap(Map_autor, autor, auxAutor);
+                    }
+                    else{
+                        pushBack(auxAutor, auxTexto);
+                        insertMap(Map_autor, autor, auxAutor);
+                    }
+                }
+            
+  */          
 }

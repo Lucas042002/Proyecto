@@ -218,25 +218,6 @@ char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_gener
                         insertMap(Map_autor, autor, auxAutor);
                     }
                 }
-                //en caso de repeticion de genero
-                /*List* auxGenero=createList();  
-                if (get_size(Map_genero)==0) {
-                    pushBack(auxGenero, auxGenero);
-                    insertMap(Map_genero, genero, auxGenero);
-                }
-                else{
-                    if (searchMap(Map_genero, genero)!=NULL){
-                        auxGenero=searchMap(Map_genero, genero);
-                        eraseMap(Map_genero,genero);
-                        pushBack(auxGenero, auxTexto);
-                        insertMap(Map_genero, genero, auxGenero);
-                    }
-                    else{
-                        pushBack(auxGenero, auxTexto);
-                        insertMap(Map_genero, genero, auxGenero);
-                    }
-                }   
-               */ 
             }
         }
     }
