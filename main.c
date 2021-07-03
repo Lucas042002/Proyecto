@@ -41,7 +41,7 @@ void menuRecomendacion(usuario*user){
             case 3: mostrarPorValoracion(Map_titulo);break;
             case 4: Buscar_Titulo(Map_titulo);break;
             case 5: buscar_autor(Map_titulo,Map_autor);break;
-            case 6: break;
+            case 6: mostrar_genero(Map_genero);break;
             case 7: break;
             case 0: break;
             default: printf("Opcion no valida.\n"); break;

@@ -48,7 +48,7 @@ void insertMap(HashMap * map, char * key, void * value) {
     long idx = hash(key, map->capacity);
     
     while (map->buckets[idx] != NULL && map->buckets[idx]->key != NULL){
-        if(is_equal(map->buckets[idx]->key, key) == 1) return; //el dato ya existe
+        //if(is_equal(map->buckets[idx]->key, key) == 1) return; //el dato ya existe
         idx = (idx + 1) % map->capacity;
     }
     

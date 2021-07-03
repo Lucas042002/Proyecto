@@ -120,8 +120,7 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
         txt=next(valoraciones);
     }
 
-    for (int m=0; m<a;m++){
-       
+    for (int m=0; m<a;m++){ 
         texto * new = firstMap(Map_genero);
         char* auxGen1 = calloc (1000000,sizeof(char));
         char * ptr1 = calloc (1000,sizeof(char));
@@ -170,7 +169,7 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
         if (get_sizelist(recomendacion)>15) break;
     }
    
-    printf("Nuestras recomendaciones para la sesion en curso son:\n");
+    printf("Nuestras recomendaciones para la sesion en curso son: \n");
     printf("TITULO                     AUTOR                  GENERO                                                      VALORACION\n");
     texto * dataRec=first(recomendacion);
     while(dataRec!=NULL){
@@ -186,14 +185,95 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
         for (int k=0; k<60-strlen(get_genero(dataRec));k++){
             printf(" ");
         }
-        printf("%.2f\n", get_valoracion(dataRec));
+        printf("%.2f \n", get_valoracion(dataRec));
         dataRec=next(recomendacion);
     }
 }
 
-void mostrar_genero(HashMap*map){
+void mostrar_genero(HashMap*Map_genero){
     char*genero=malloc(sizeof(char));
     printf("Que genero desea encontrar:\n");
     scanf("%s", genero);
+    char * vector [10];
+    for (int l=0;l<10;l++){
+         vector[l] = calloc (200, sizeof(char));
+    }
+    char* auxTipo= malloc (sizeof(char));
+    
+    int verdad;
+    
+    int a=0;
+    char* auxGen = malloc (sizeof(char));
+    strcpy(auxGen,genero);
+    char * ptr = calloc (1000,sizeof(char));
+    ptr=strtok(auxGen, ",\n");                
+    while(ptr!=NULL){
+       verdad=0;
+       if (a==0) {
+           vector[a]=ptr; 
+           a++;
+       }
+       else{
+           for (int k=0; k<a; k++){
+               if (strcmp(vector[k],ptr)==0) {
+                   verdad=1;
+               }  
+           }
+           if (verdad==0){
+                strcpy(vector[a],ptr); 
+                a++;
+           }   
+       }
+       ptr=strtok(NULL, ", \n");  
+    }
+        texto* vector2[100];
+        int control=0;
+    for (int m=0; m<a;m++){
 
+    texto * new = firstMap(Map_genero);
+    char* auxGen1 = calloc (1000000,sizeof(char));
+    char * ptr1 = calloc (1000,sizeof(char));
+        
+        while (new!=NULL){
+            strcpy(auxGen1,get_key(Map_genero));
+            ptr1= strtok(auxGen1, ",\n");
+            while (ptr1!=NULL){
+                if (strcmp(vector[m],ptr1)==0){                                  
+                        int repetido2=0;
+                        if (control==0){
+                            vector2[control]=new;
+                            control++;
+                        }
+                        else{
+                            for(int k=0;k<control;k++){
+                                if(strcmp(get_titulo(vector2[k]),get_titulo(new))==0){
+                                    repetido2=1;
+                                }
+                            }
+                            if(repetido2==0){
+                                vector2[control]=new;
+                                control++; 
+                            }
+                        }
+                }
+                ptr1=strtok(NULL, ",\n");
+            }
+            new=nextMap(Map_genero);
+        }
+    }
+    texto *swap;
+    for (int c = 0 ; c < control -1; c++){
+        for (int d = 0 ; d < control- c-1; d++){
+            if (get_valoracion(vector2[d]) < get_valoracion(vector2[d+1])){
+                swap       = vector2[d];
+                vector2[d]   = vector2[d+1];
+                vector2[d+1] = swap;   
+            }
+        }
+    }
+
+    for (int j=0; j<control; j++){
+        printf("%s\t%.2f \n",get_titulo(vector2[j]), get_valoracion(vector2[j]));
+    }
+    
 }
