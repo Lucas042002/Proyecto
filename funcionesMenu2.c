@@ -309,33 +309,60 @@ void agregarTexto(HashMap *Map_genero, HashMap* Map_autor, HashMap *Map_titulo, 
             char * autor     = (char *)calloc(1000,sizeof(char));
             char * sinopsis  = (char *)calloc(10000,sizeof(char));
             char * genero    = (char *)calloc(1000,sizeof(char));
-            
-            float valoracion;
+            char * valoracion= (char *)calloc(20,sizeof(char));
 
-            /*
-                
-                auxTexto = crear_texto(titulo,valoracion, autor, genero, sinopsis);
+                printf("Ingrese titulo de Lectura a Ingresar. Recuerde que este tipo de lectura debe corresponder a %s\n", tipo);
+                scanf("%[^\n]", titulo);
+                fgets(titulo,100,stdin);
+                fgets(titulo,100,stdin);
+                titulo[strlen(titulo)-1]=0;
+                if (searchMap(Map_titulo, titulo)!=NULL){
+                    printf("Título ya existente, retornando a menu...\n");
+                    return;
+                }
+                printf("Ingrese genero de lectura ingresada. Si es mas de un genero ingresar separados por comas y sin espacios, por favor:\n");
+                scanf("%s", genero);
+                printf("Ingrese autor de lectura ingresada:\n");
+                scanf("%[^\n]", autor);
+                fgets(autor,10000,stdin);
+                fgets(autor,10000,stdin);
+                autor[strlen(autor)-1]=0;
+                printf("Ingrese valoracion  de lectura ingresada:\n");
+                scanf("%s", valoracion);
+                printf("Ingrese sinopsis. Sin saltos de linea (ENTER) hasta llegar al final de esta:\n");
+                scanf("%[^\n]", sinopsis);
+                fgets(sinopsis,10000,stdin);
+                fgets(sinopsis,10000,stdin);
+                sinopsis[strlen(sinopsis)-1]=0;
+                texto * auxTexto;
+                float valoracion2= atof(valoracion);
+                auxTexto = crear_texto(titulo,valoracion2, autor, genero, sinopsis);
+               
                 //insercion en mapa titulo
                 insertMap (Map_titulo,titulo,auxTexto);
                 insertMap(Map_genero,genero,auxTexto);
+                printf("aaaaaaaaaa\n");
                 //en caso de repeticion de autor
                 List* auxAutor = createList();
-                if (get_size(Map_autor)==0)  {
+                
+                if (searchMap(Map_autor, autor)!=NULL){
+                    auxAutor=searchMap(Map_autor, autor);
+                    eraseMap(Map_autor,autor);
                     pushBack(auxAutor, auxTexto);
                     insertMap(Map_autor, autor, auxAutor);
                 }
                 else{
-                    if (searchMap(Map_autor, autor)!=NULL){
-                        auxAutor=searchMap(Map_autor, autor);
-                        eraseMap(Map_autor,autor);
-                        pushBack(auxAutor, auxTexto);
-                        insertMap(Map_autor, autor, auxAutor);
-                    }
-                    else{
-                        pushBack(auxAutor, auxTexto);
-                        insertMap(Map_autor, autor, auxAutor);
-                    }
+                    pushBack(auxAutor, auxTexto);
+                    insertMap(Map_autor, autor, auxAutor);
                 }
-            
-  */          
+                char * linea = (char*) calloc (100000, sizeof(char));
+                printf("bbbb\n");
+                FILE * fp;
+                if (tipo == "Mangas") fp = fopen ("mangas.csv", "a+");
+                if (tipo == "Libros") fp = fopen ("libros.csv", "a+");
+                if (tipo == "Comics") fp = fopen ("comics.csv", "a+");
+                
+                fprintf(fp,"%s,\"%s\",%s,%s,\"%s\"",titulo,genero,autor,valoracion, sinopsis);
+                fclose(fp);;
+                
 }
