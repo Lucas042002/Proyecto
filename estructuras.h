@@ -30,4 +30,7 @@ List* get_valoracionL(usuario * user);
 char* get_generoL(vLector*t);
 char* get_TipoL(vLector*t);
 float  get_calificacion(vLector *t);
+
+char *get_nombreUser(usuario * user);
+void modificar_val(texto *t,float nueva_val);
 #endif /* estructuras_h */

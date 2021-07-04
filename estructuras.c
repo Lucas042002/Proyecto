@@ -153,3 +153,10 @@ char* get_TipoL(vLector*t){
 float  get_calificacion(vLector *t){
     return (t->calificacion);
 }
+char *get_nombreUser(usuario * user){
+    return (user->nombre);
+}
+
+void modificar_val(texto *t,float nueva_val){
+    t->valoracion=nueva_val;
+}  
