@@ -7,6 +7,106 @@
 #include "list.h"
 #include "estructuras.h"
 
+void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Map_genero,HashMap*Map_autor){
+    char*titulo_ingresado=(char *)malloc(sizeof(char));
+    char* val_ingresada=(char *)malloc(sizeof(char));
+    texto*aux;
+    printf("Escriba el nombre de la lectura a valorar \n");
+    do{
+        scanf("%[^\n]", titulo_ingresado);
+        fgets(titulo_ingresado,40,stdin);
+        fgets(titulo_ingresado,40,stdin);
+        titulo_ingresado[strlen(titulo_ingresado)-1]=0;
+        aux = searchMap(Map_titulo,titulo_ingresado);
+        if (aux==NULL) printf ("No se encontro el titulo ingresado,intente nuevamente.\n");
+    }while (aux==NULL);
+    
+    printf ("Escriba la valoracion, recuerde que puede valorar desde el 1 al 10.\n");
+    scanf("%s",val_ingresada);
+
+    //Ingresar la valoracion en el usuario
+    char*cadena_usuario=(char *)malloc(sizeof(char));
+    char*genero=get_genero(aux);
+    char*titulo=get_titulo(aux);
+    strcat(cadena_usuario,tipoLec);
+    strcat(cadena_usuario,",");
+    strcat(cadena_usuario,titulo);
+    strcat(cadena_usuario,",");
+    strcat(cadena_usuario,"\"");
+    strcat(cadena_usuario,genero);
+    strcat(cadena_usuario,"\"");
+    strcat(cadena_usuario,",");
+    strcat(cadena_usuario,val_ingresada);
+    printf ("%s\n", cadena_usuario);//El punto al final es por el float
+
+    //Ingresarlo en el usuarios.csv y la lectura.csv
+    /*char *linea;
+    char *ptr;
+    char *aux2=(char*)malloc(sizeof(char));
+    FILE*csv = fopen("usuarios.csv", "r+");
+    while (!feof(csv)){
+        linea = (char *) malloc(5000*sizeof(char));
+        fgets(linea, 5000, csv);
+        if(linea){
+            ptr = strtok(linea, ",");
+            if (strcmp(get_nombreUser(user),ptr)==0){
+                printf ("ptr = %s\n",ptr);
+                strcpy(aux2,ptr);
+                ptr = strtok(NULL, ";");
+                strcat(aux2,ptr);
+                printf ("aux2 = %s\n",aux2);
+                ptr = strtok(NULL, ",");
+                ptr = strtok(NULL, ",");
+                printf ("ptr = %s\n",ptr);
+                if (ptr == NULL ) {
+                    fseek( csv, 129 , SEEK_SET);
+                    fputs (cadena_usuario, csv);
+                    break;
+                }
+                else {
+                    ptr = strtok(NULL, "\n");
+                    fputs (cadena_usuario, csv);
+                    break;
+                }
+                
+            }
+        }
+    }*/
+    //Ingresar en los mapas la valoracion
+    float val_fl = atof(val_ingresada);
+    float nueva_val;
+    nueva_val = (get_valoracion(aux)*0.95) + (val_fl*0.05);
+    printf ("%.2f\n",nueva_val);
+    modificar_val(aux,nueva_val);
+    //Ingresar en Map_titulo
+    eraseMap(Map_titulo,titulo_ingresado);
+    insertMap(Map_titulo,titulo_ingresado,aux);
+
+    //Ingresar en Map_genero
+    texto*aux2 = firstMap(Map_genero);
+    while (aux2!=NULL){
+        if (strcmp(get_titulo(aux),get_titulo(aux2))==0){
+            char *auxGenero=malloc(sizeof(char));
+            strcpy(auxGenero,get_genero(aux2));
+            eraseMap(Map_genero,auxGenero);
+            insertMap(Map_genero,auxGenero,aux);
+            break;
+        }
+        aux2=nextMap(Map_genero);
+    }
+    //Ingresar en Map_Autor
+    texto*aux3 = firstMap(Map_autor);
+    while (aux3!=NULL){
+        if (strcmp(get_titulo(aux),get_titulo(aux3))==0){
+            char *auxAutor=malloc(sizeof(char));
+            strcpy(auxAutor,get_autor(aux3));
+            eraseMap(Map_autor,auxAutor);
+            insertMap(Map_autor,auxAutor,aux);
+            break;
+        }
+        aux3=nextMap(Map_autor);
+    }
+}
 void Buscar_Titulo(HashMap*map){
     char*titulo=malloc(sizeof(char));
     texto*auxtitulo;
@@ -341,28 +441,29 @@ void agregarTexto(HashMap *Map_genero, HashMap* Map_autor, HashMap *Map_titulo, 
                 //insercion en mapa titulo
                 insertMap (Map_titulo,titulo,auxTexto);
                 insertMap(Map_genero,genero,auxTexto);
-                printf("aaaaaaaaaa\n");
-                //en caso de repeticion de autor
-                List* auxAutor = createList();
-                
-                if (searchMap(Map_autor, autor)!=NULL){
-                    auxAutor=searchMap(Map_autor, autor);
-                    eraseMap(Map_autor,autor);
-                    pushBack(auxAutor, auxTexto);
-                    insertMap(Map_autor, autor, auxAutor);
-                }
-                else{
-                    pushBack(auxAutor, auxTexto);
-                    insertMap(Map_autor, autor, auxAutor);
-                }
+                insertMap(Map_autor, autor, auxTexto);
                 char * linea = (char*) calloc (100000, sizeof(char));
-                printf("bbbb\n");
-                FILE * fp;
-                if (tipo == "Mangas") fp = fopen ("mangas.csv", "a+");
-                if (tipo == "Libros") fp = fopen ("libros.csv", "a+");
-                if (tipo == "Comics") fp = fopen ("comics.csv", "a+");
-                
-                fprintf(fp,"%s,\"%s\",%s,%s,\"%s\"",titulo,genero,autor,valoracion, sinopsis);
-                fclose(fp);;
+                FILE * fp= NULL;
+                if (strcmp(tipo,"Mangas")==0) fp = fopen ("mangas.csv", "a");
+                if (strcmp(tipo,"Libros")==0) fp = fopen ("libros.csv", "a");
+                if (strcmp(tipo,"Comics")==0) fp = fopen ("comics.csv", "a");
+
+                strcat(linea, titulo);
+                strcat(linea, ",");
+                strcat(linea, "\"");
+                strcat(linea, genero);
+                strcat(linea, "\"");
+                strcat(linea, ",");
+                strcat(linea, autor);
+                strcat(linea, ",");
+                strcat(linea, valoracion);
+                strcat(linea, ",");
+                strcat(linea, "\"");
+                strcat(linea, sinopsis);
+                strcat(linea, "\"");
+                strcat(linea, "\n");
+                fprintf(fp,"%s",linea);
+                printf("Texto agregado correctamente.\n");
+                fclose(fp);
                 
 }

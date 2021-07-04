@@ -68,16 +68,18 @@ void agregar_lista (usuario*user, vLector*val){
 }
 
 void mostrarUser(usuario *user){
-    printf("nombre = %s\n", user->nombre);
+    printf("Usuario Ingresado = %s\n", user->nombre);
 }
 void mostrarVal(usuario *user){
     vLector*aux=malloc(sizeof(vLector));
     aux=first(user->valoracionLecturas);
+    printf("Valoraciones del Usuario:\n");
     while(aux!=NULL){
-        printf("%s\n", aux->tipoLectura);
-        printf("%s\n", aux->titulo);
-        printf("%s\n", aux->genero);
-        printf("%.2f\n", aux->calificacion);
+        printf("Tipo de lectura = %s\n", aux->tipoLectura);
+        printf("Titulo de la lectura = %s\n", aux->titulo);
+        printf("Genero(s) de la lectura = %s\n", aux->genero);
+        printf("Calificacion de la lectura = %.2f\n", aux->calificacion);
+        printf("\n");
         aux=next(user->valoracionLecturas);
     }
 

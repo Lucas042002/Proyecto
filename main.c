@@ -14,8 +14,10 @@ void menuRecomendacion(usuario*user){
     HashMap*Map_autor=createMap(50);
     HashMap*Map_genero=createMap(50);
     mostrarUser(user);
+    printf("\n");
     mostrarVal(user);
     char* tipoLec = malloc (sizeof(char));
+    printf("\n");
     tipoLec = importarTipoLectura(Map_titulo,Map_autor,Map_genero);
     int numero = -1;
     while(numero != 0){
@@ -36,7 +38,7 @@ void menuRecomendacion(usuario*user){
         printf("\n");
 
         switch(numero){
-            case 1: break;
+            case 1: Ingresar_valoracion(user,tipoLec,Map_titulo,Map_genero,Map_autor);break;
             case 2: mostrar_afinidad(Map_genero,user,Map_titulo,tipoLec);break;
             case 3: mostrarPorValoracion(Map_titulo);break;
             case 4: Buscar_Titulo(Map_titulo);break;
@@ -74,8 +76,10 @@ int main (){
             case 1: crearUsuario(texto); break;
             case 2:{
                 user = ingresarUsuario(texto,user);
-                mostrarUser(user); 
+                
                 if (user!=NULL) {
+                    //system("pause");
+                    system("@cls||clear");
                     menuRecomendacion (user);
                     return 0;
                 }
@@ -84,8 +88,7 @@ int main (){
             case 0: break;
             default: printf("Opcion no valida.\n"); break;
         }
-        //system("pause");
-        //system("@cls||clear");
+        
     }
     return 0;
 }

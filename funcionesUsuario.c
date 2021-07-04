@@ -21,7 +21,6 @@ int get_file_size (FILE *fp) {
 void cargarDatosUsuario(char*copyLinea,usuario*user){
     char *ptr, *ptr2;
 
-    if(user==NULL) printf("aaaaaaaaaaaa\n");
     ptr = strtok(copyLinea, ";");
     ptr = strtok(NULL, "\n");
     
@@ -56,7 +55,7 @@ void cargarDatosUsuario(char*copyLinea,usuario*user){
             ptr2=strtok(NULL,",");
         }
     }
-    if(user==NULL) printf("aaaaaaaaaaaa1\n");
+    
 }
 void crearUsuario(FILE*texto){
     char*nombre_usuario=(char *)malloc(20*sizeof(char));
@@ -134,7 +133,6 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
                             user = crear_usuario(nombre_usuario);
                             cargarDatosUsuario(copyLinea,user);
                             fclose(texto);
-                            //free(linea);
                             return user;
                         }
                         intento++;
@@ -179,45 +177,23 @@ char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_gener
 
             if( ptr ){
                 strcpy(titulo,ptr);
-                //printf ("%s\n",titulo);
                 ptr = strtok(NULL, "\"");
                 strcpy(genero, ptr);
-                //printf ("%s\n",genero);
 
                 ptr = strtok(NULL, ",");
                 strcpy(autor,ptr);
-                //printf ("%s\n",autor);
 
                 ptr = strtok(NULL, ",");
                 valoracion = atof(ptr);
-                //printf ("%.2f\n",valoracion);
 
                 ptr = strtok(NULL, "\"\n");
                 strcpy(sinopsis, ptr);
-                //printf ("%s\n",sinopsis);
                 
                 auxTexto = crear_texto(titulo,valoracion, autor, genero, sinopsis);
                 //insercion en mapa titulo
                 insertMap (Map_titulo,titulo,auxTexto);
                 insertMap(Map_genero,genero,auxTexto);
-                //en caso de repeticion de autor
-                List* auxAutor = createList();
-                if (get_size(Map_autor)==0)  {
-                    pushBack(auxAutor, auxTexto);
-                    insertMap(Map_autor, autor, auxAutor);
-                }
-                else{
-                    if (searchMap(Map_autor, autor)!=NULL){
-                        auxAutor=searchMap(Map_autor, autor);
-                        eraseMap(Map_autor,autor);
-                        pushBack(auxAutor, auxTexto);
-                        insertMap(Map_autor, autor, auxAutor);
-                    }
-                    else{
-                        pushBack(auxAutor, auxTexto);
-                        insertMap(Map_autor, autor, auxAutor);
-                    }
-                }
+                insertMap(Map_autor, autor, auxTexto);
             }
         }
     }
