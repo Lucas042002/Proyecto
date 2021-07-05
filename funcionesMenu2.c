@@ -12,6 +12,7 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
     char* val_ingresada=(char *)malloc(sizeof(char));
     int intentos=0;
     texto*aux;
+    List *auxiliar;
     printf("Escriba el nombre de la lectura a valorar \n");
     do{
         
@@ -20,132 +21,136 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         fgets(titulo_ingresado,40,stdin);
         titulo_ingresado[strlen(titulo_ingresado)-1]=0;
         aux = searchMap(Map_titulo,titulo_ingresado);
-        if (aux==NULL) printf ("No se encontro el titulo ingresado,intente nuevamente.\n");
-        intentos ++;
+        vLector* auxTexto;
+        if (aux==NULL) {
+            printf ("No se encontro el titulo ingresado,intente nuevamente.\n");
+            intentos ++;
+        }
+        auxiliar = get_valoracionL(user);
+        auxTexto = first(auxiliar);
+        while (auxTexto!=NULL){
+            if (strcmp(titulo_ingresado,get_tituloL(auxTexto))==0){
+                printf ("El titulo ya se encuentra valorado, intente un nuevo titulo.\n");
+                intentos++;
+                break;
+            }
+            auxTexto=next(auxiliar);
+        }
+        
         if(intentos==3) {
             printf ("Demasiados intentos, retornando a menu.\n");
             return;
         }
     }while (aux==NULL);
-    
     printf ("Escriba la valoracion, recuerde que puede valorar desde el 1 al 10.\n");
     scanf("%s",val_ingresada);
 
-    //Ingresar la valoracion en el usuario//
-    char*cadena_usuario=(char *)malloc(1000*sizeof(char));
-    char*genero=get_genero(aux);
-    char*titulo=get_titulo(aux);
-    strcpy(cadena_usuario,",");
-    strcat(cadena_usuario,tipoLec);
-    strcat(cadena_usuario,",");
-    strcat(cadena_usuario,titulo);
-    strcat(cadena_usuario,",");
-    strcat(cadena_usuario,"\"");
-    strcat(cadena_usuario,genero);
-    strcat(cadena_usuario,"\"");
-    strcat(cadena_usuario,",");
-    strcat(cadena_usuario,val_ingresada);
+        //Ingresar la valoracion en el usuario//
+        char*cadena_usuario=(char *)malloc(1000*sizeof(char));
+        char*genero=get_genero(aux);
+        char*titulo=get_titulo(aux);
+        strcpy(cadena_usuario,",");
+        strcat(cadena_usuario,tipoLec);
+        strcat(cadena_usuario,",");
+        strcat(cadena_usuario,titulo);
+        strcat(cadena_usuario,",");
+        strcat(cadena_usuario,"\"");
+        strcat(cadena_usuario,genero);
+        strcat(cadena_usuario,"\"");
+        strcat(cadena_usuario,",");
+        strcat(cadena_usuario,val_ingresada);
 
-    printf ("%s\n", cadena_usuario);
-    //El punto al final es por el float
+       
+        //El punto al final es por el float
 
-    //Ingresarlo en el usuarios.csv y la lectura.csv
-    char *linea;
-    char * linea2;
-    char *ptr, *ptr2;
-    char *aux2=(char*)malloc(sizeof(char));
-    FILE*csv = fopen("usuarios.csv", "r+");
-    FILE *copiacsv = fopen("usuarioscopia.csv", "w");
-    while (!feof(csv)){
-         linea2 = (char *) malloc(50000*sizeof(char));
-        fgets(linea2, 50000, csv);
-        ptr = strtok(linea2, "\n");
-        if (linea2!=NULL){
-            
-            fputs(linea2,copiacsv);
-            ptr = strtok(NULL, "\n");
+        //Ingresarlo en el usuarios.csv y la lectura.csv
+        char *linea;
+        char * linea2;
+        char *ptr, *ptr2;
+        char *aux2=(char*)malloc(sizeof(char));
+        FILE*csv = fopen("usuarios.csv", "r+");
+        FILE *copiacsv = fopen("usuarioscopia.csv", "w");
+        while (!feof(csv)){
+            linea2 = (char *) malloc(50000*sizeof(char));
+            fgets(linea2, 50000, csv);
+            ptr = strtok(linea2, "\n");
+            if (linea2!=NULL){
+                
+                fputs(linea2,copiacsv);
+                ptr = strtok(NULL, "\n");
+            }
+            fputs("\n",copiacsv);
         }
-        fputs("\n",copiacsv);
-    }
-    rewind(csv);
-    fclose(copiacsv);
-    while (!feof(csv)){
-        linea = (char *) malloc(5000*sizeof(char));
-        fgets(linea, 5000, csv);
-        if(linea){
-            ptr = strtok(linea, ",");
-            if (strcmp(get_nombreUser(user),ptr)==0){
-                printf ("ptr = %s\n",ptr);
-                strcat(aux2,ptr);
-                ptr = strtok(NULL, ";");
-                strcat(aux2,ptr);
-                printf ("aux2 = %s\n",aux2);
-                ptr = strtok(NULL, ",");
-                ptr = strtok(NULL, ",");
-                printf ("ptr = %s\n",ptr);
-                while(ptr!=NULL){
+        rewind(csv);
+        fclose(copiacsv);
+        while (!feof(csv)){
+            linea = (char *) malloc(5000*sizeof(char));
+            fgets(linea, 5000, csv);
+            if(linea){
+                ptr = strtok(linea, ",");
+                if (strcmp(get_nombreUser(user),ptr)==0){
+                    strcat(aux2,ptr);
+                    ptr = strtok(NULL, ";");
+                    strcat(aux2,ptr);
                     ptr = strtok(NULL, ",");
-                }
-                printf ("ptr = %s\n",ptr);
-                    long donde = ftell(csv);
-                    donde=donde-2;
-                    fseek( csv, donde , SEEK_SET);
-                    printf("cadena = %s", cadena_usuario);
-                    fprintf(csv,"%s",cadena_usuario);
-                    copiacsv = fopen("usuarioscopia.csv", "r+");
-                    fseek( copiacsv, donde+2, SEEK_SET);
-                    while (!feof(copiacsv)){
-                        fputs("\n",csv);
-                        fgets(linea2, 50000, copiacsv);
-                        if (linea2!=NULL){
-                            ptr = strtok(linea2, "\n");
-                            fputs(linea2,csv);
-                        }
-                        
+                    ptr = strtok(NULL, ",");
+                    while(ptr!=NULL){
+                        ptr = strtok(NULL, ",");
                     }
-                    fclose(copiacsv);
-                    fclose(csv);
-                    break;
-                
-                
+                        long donde = ftell(csv);
+                        donde=donde-2;
+                        fseek( csv, donde , SEEK_SET);
+                        fprintf(csv,"%s",cadena_usuario);
+                        copiacsv = fopen("usuarioscopia.csv", "r+");
+                        fseek( copiacsv, donde+2, SEEK_SET);
+                        while (!feof(copiacsv)){
+                            fputs("\n",csv);
+                            fgets(linea2, 50000, copiacsv);
+                            if (linea2!=NULL){
+                                ptr = strtok(linea2, "\n");
+                                fputs(linea2,csv);
+                            }
+                            
+                        }
+                        fclose(copiacsv);
+                        fclose(csv);
+                        break;
+                }
             }
         }
-    }
+        //Ingresar en los mapas la valoracion
+        float val_fl = atof(val_ingresada);
+        float nueva_val;
+        nueva_val = (get_valoracion(aux)*0.95) + (val_fl*0.05);
+        modificar_val(aux,nueva_val);
+        //Ingresar en Map_titulo
+        eraseMap(Map_titulo,titulo_ingresado);
+        insertMap(Map_titulo,titulo_ingresado,aux);
 
-    //Ingresar en los mapas la valoracion
-    float val_fl = atof(val_ingresada);
-    float nueva_val;
-    nueva_val = (get_valoracion(aux)*0.95) + (val_fl*0.05);
-    printf ("%.2f\n",nueva_val);
-    modificar_val(aux,nueva_val);
-    //Ingresar en Map_titulo
-    eraseMap(Map_titulo,titulo_ingresado);
-    insertMap(Map_titulo,titulo_ingresado,aux);
-
-    //Ingresar en Map_genero
-    texto*aux3 = firstMap(Map_genero);
-    while (aux3!=NULL){
-        if (strcmp(get_titulo(aux),get_titulo(aux3))==0){
-            char *auxGenero=malloc(sizeof(char));
-            strcpy(auxGenero,get_genero(aux3));
-            eraseMap(Map_genero,auxGenero);
-            insertMap(Map_genero,auxGenero,aux);
-            break;
+        //Ingresar en Map_genero
+        texto*aux3 = firstMap(Map_genero);
+        while (aux3!=NULL){
+            if (strcmp(get_titulo(aux),get_titulo(aux3))==0){
+                char *auxGenero=malloc(sizeof(char));
+                strcpy(auxGenero,get_genero(aux3));
+                eraseMap(Map_genero,auxGenero);
+                insertMap(Map_genero,auxGenero,aux);
+                break;
+            }
+            aux3=nextMap(Map_genero);
         }
-        aux3=nextMap(Map_genero);
-    }
-    //Ingresar en Map_Autor
-    aux3 = firstMap(Map_autor);
-    while (aux3!=NULL){
-        if (strcmp(get_titulo(aux),get_titulo(aux3))==0){
-            char *auxAutor=malloc(sizeof(char));
-            strcpy(auxAutor,get_autor(aux3));
-            eraseMap(Map_autor,auxAutor);
-            insertMap(Map_autor,auxAutor,aux);
-            break;
+        //Ingresar en Map_Autor
+        aux3 = firstMap(Map_autor);
+        while (aux3!=NULL){
+            if (strcmp(get_titulo(aux),get_titulo(aux3))==0){
+                char *auxAutor=malloc(sizeof(char));
+                strcpy(auxAutor,get_autor(aux3));
+                eraseMap(Map_autor,auxAutor);
+                insertMap(Map_autor,auxAutor,aux);
+                break;
+            }
+            aux3=nextMap(Map_autor);
         }
-        aux3=nextMap(Map_autor);
-    }
 }
 void Buscar_Titulo(HashMap*map){
     char*titulo=malloc(sizeof(char));
@@ -457,7 +462,7 @@ void agregarTexto(HashMap *Map_genero, HashMap* Map_autor, HashMap *Map_titulo, 
                 fgets(titulo,100,stdin);
                 titulo[strlen(titulo)-1]=0;
                 if (searchMap(Map_titulo, titulo)!=NULL){
-                    printf("Título ya existente, retornando a menu...\n");
+                    printf("Titulo ya existente, retornando a menu...\n");
                     return;
                 }
                 printf("Ingrese genero de lectura ingresada. Si es mas de un genero ingresar separados por comas y sin espacios, por favor:\n");
@@ -503,7 +508,7 @@ void agregarTexto(HashMap *Map_genero, HashMap* Map_autor, HashMap *Map_titulo, 
                 strcat(linea, "\"");
                 strcat(linea, "\n");
                 fprintf(fp,"%s",linea);
-                printf("Texto agregado correctamente.\n");
+                printf("\nTexto agregado correctamente.\n");
                 fclose(fp);
                 
 }
