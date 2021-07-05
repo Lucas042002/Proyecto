@@ -50,7 +50,7 @@ texto* crear_texto (char*titulo,float valoracion, char*autor,char*genero,char*si
 
     return text;
 }
-vLector* crear_valoracion(char*a, char*b,char*c,int d){
+vLector* crear_valoracion(char*a, char*b,char*c,float d){
     vLector *val = (vLector *) malloc (sizeof(vLector));
     val->tipoLectura=(char *)malloc(20*sizeof(char));
     val->titulo=(char *)malloc(70*sizeof(char));
@@ -102,6 +102,7 @@ char* get_sinopsis(texto*t){
 }
 
 void mostrarPorValoracion(HashMap *map){
+  system("@cls||clear");
   texto *vector = malloc(sizeof(texto)*get_size(map));
   texto *vectorMapa = firstMap(map);
   int cont = 0;
@@ -120,23 +121,13 @@ void mostrarPorValoracion(HashMap *map){
             }
         }
     }
+    printf("VALORACION\tTITULO\n");
     for(int l=0;l<cont;l++){
          printf ("%.2f\t\t%s\n",vector[l].valoracion, vector[l].titulo);
     }
 
 }
 
-int comparar(texto* aComparar, char *aux){
-  int largo = strlen (aux);
-  int i=largo-1;
-  while (i>0){
-    if (aComparar->autor[i]!=aux[i]){
-      return 1;
-    }
-    i--;
-  }
-  return 0;
-}
 
 char* get_tituloL(vLector*t){
     return(t->titulo);

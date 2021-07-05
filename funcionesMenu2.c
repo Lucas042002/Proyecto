@@ -10,37 +10,33 @@
 void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Map_genero,HashMap*Map_autor){
     char*titulo_ingresado=(char *)malloc(sizeof(char));
     char* val_ingresada=(char *)malloc(sizeof(char));
-    int intentos=0;
     texto*aux;
     List *auxiliar;
+    system("@cls||clear");
     printf("Escriba el nombre de la lectura a valorar \n");
     do{
         
         scanf("%[^\n]", titulo_ingresado);
+
         fgets(titulo_ingresado,40,stdin);
         fgets(titulo_ingresado,40,stdin);
         titulo_ingresado[strlen(titulo_ingresado)-1]=0;
         aux = searchMap(Map_titulo,titulo_ingresado);
         vLector* auxTexto;
         if (aux==NULL) {
-            printf ("No se encontro el titulo ingresado,intente nuevamente.\n");
-            intentos ++;
+            printf ("No se encontro el titulo ingresado,retornando al menu.\n");
+            return;
         }
         auxiliar = get_valoracionL(user);
         auxTexto = first(auxiliar);
         while (auxTexto!=NULL){
             if (strcmp(titulo_ingresado,get_tituloL(auxTexto))==0){
-                printf ("El titulo ya se encuentra valorado, intente un nuevo titulo.\n");
-                intentos++;
-                break;
+                printf ("El titulo ya se encuentra valorado, retornando al menu.\n");
+                return;
             }
             auxTexto=next(auxiliar);
         }
         
-        if(intentos==3) {
-            printf ("Demasiados intentos, retornando a menu.\n");
-            return;
-        }
     }while (aux==NULL);
     printf ("Escriba la valoracion, recuerde que puede valorar desde el 1 al 10.\n");
     scanf("%s",val_ingresada);
@@ -59,9 +55,7 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         strcat(cadena_usuario,"\"");
         strcat(cadena_usuario,",");
         strcat(cadena_usuario,val_ingresada);
-
-       
-        //El punto al final es por el float
+        strcat(cadena_usuario,"\n");
 
         //Ingresarlo en el usuarios.csv y la lectura.csv
         char *linea;
@@ -69,40 +63,43 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         char *ptr, *ptr2;
         FILE*csv = fopen("usuarios.csv", "r+");
         FILE *copiacsv = fopen("usuarioscopia.csv", "w");
-        while (!feof(csv)){
+        fseek(csv, 0L, SEEK_END);
+        int i=ftell(csv);
+        rewind(csv);
+        int j=0;
+        while (j<i-3){
             linea2 = (char *) malloc(50000*sizeof(char));
             fgets(linea2, 50000, csv);
             if (linea2!=NULL){
+                if(j+strlen(linea2)>=i-3){
+                    linea2[strlen(linea2)-1]=0;
+                }
                 fputs(linea2,copiacsv);
             }
+            j=j+strlen(linea2);
         }
         rewind(csv);
         fclose(copiacsv);
         while (!feof(csv)){
-            linea = (char *) malloc(5000*sizeof(char));
-            fgets(linea, 5000, csv);
+            linea = (char *) malloc(50000*sizeof(char));
+            fgets(linea, 50000, csv);
             if(linea){
                 ptr = strtok(linea, ",");
                 if (strcmp(get_nombreUser(user),ptr)==0){
-                    /*
-                    ptr = strtok(NULL, ";");
-                    ptr = strtok(NULL, ",");
-                    ptr = strtok(NULL, ",");
-                    while(ptr!=NULL){
-                        ptr = strtok(NULL, ",");
-                    }*/
+
                         long donde = ftell(csv);
                         donde=donde-2;
                         fseek( csv, donde , SEEK_SET);
                         fprintf(csv,"%s",cadena_usuario);
                         copiacsv = fopen("usuarioscopia.csv", "r+");
                         fseek(copiacsv, donde+2, SEEK_SET);
-                        fputs("\n",csv);
+
                         while (!feof(copiacsv)){
                             fgets(linea2, 50000, copiacsv);
                             if (linea2!=NULL){
                                 fputs(linea2,csv);
                             }
+                            
                         }
                         
                         fclose(copiacsv);
@@ -111,7 +108,6 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
                 }
             }
         }
-        printf("AA\n");
         //Ingresar en los mapas la valoracion
         float val_fl = atof(val_ingresada);
         float nueva_val;
@@ -145,15 +141,18 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
             }
             aux3=nextMap(Map_autor);
         }
+    printf("Valoracion agregada exitosamente!\n");    
 }
 void Buscar_Titulo(HashMap*map){
     char*titulo=malloc(sizeof(char));
     texto*auxtitulo;
+    system("@cls||clear");
     printf("Que titulo deseas buscar?\n");
     scanf("%[^\n]", titulo);
     fgets(titulo,40,stdin);
     fgets(titulo,40,stdin);
     titulo[strlen(titulo)-1]=0;
+    printf("\n");
     auxtitulo=searchMap(map,titulo);
 
     if(auxtitulo==NULL){
@@ -178,23 +177,24 @@ void Buscar_Titulo(HashMap*map){
     }
 
 }
-void buscar_autor(HashMap*map, HashMap*mapAutor){
+void buscar_autor(HashMap*mapAutor){
     char*autor=malloc(sizeof(char));
     texto*auxautor;
+    system("@cls||clear");
     printf("Que autor deseas buscar?\n");
     scanf("%[^\n]", autor);
     fgets(autor,40,stdin);
     fgets(autor,40,stdin);
     autor[strlen(autor)-1]=0;
-    //auxautor=searchMap(map,autor);
     if(searchMap(mapAutor,autor)==NULL){
         printf("El autor ingresado no se encuentra en nuestra base de datos\n");
         return;
     }
-    auxautor=firstMap(map);
+    auxautor=firstMap(mapAutor);
+    printf("Obras pertenecientes al autor ingresado : \n ");
+    printf("\n");
     while(auxautor!=NULL){
-        //printf("%s", autor);
-        if(comparar(auxautor,autor)==0){
+        if(strcmp(get_key(mapAutor),autor)==0){
             printf("Titulo de la obra: ");
             printf("%s", get_titulo(auxautor));
             printf("\n");
@@ -206,13 +206,14 @@ void buscar_autor(HashMap*map, HashMap*mapAutor){
             printf("\n");
             printf("-----------------------------------\n");
         }  
-    auxautor=nextMap(map);
+    auxautor=nextMap(mapAutor);
     }
    free (autor);
    free (auxautor);
 }
 
 void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo, char *tipoLec){
+    system("@cls||clear");
     List * valoraciones = get_valoracionL(user);
     if (valoraciones==NULL) return;
     List * recomendacion = createList();
@@ -234,7 +235,7 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
             char * ptr = calloc (1000,sizeof(char));
             if (calificacion>5){
                 auxGen=get_generoL(txt);               
-                ptr=strtok(auxGen, ",\n");                
+                ptr=strtok(auxGen, ",");                
                 while(ptr!=NULL){
                     verdad=0;
                     if (a==0) {
@@ -253,7 +254,7 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
                              a++;
                         }   
                     }
-                    ptr=strtok(NULL, ", \n");  
+                    ptr=strtok(NULL, ",");  
                 }
             }  
         }
@@ -338,6 +339,7 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
 
 void mostrar_genero(HashMap*Map_genero){
     char*genero=malloc(sizeof(char));
+    system("@cls||clear");
     printf("Que genero desea encontrar:\n");
     scanf("%s", genero);
     char * vector [10];
@@ -417,6 +419,7 @@ void mostrar_genero(HashMap*Map_genero){
     do{ 
         scanf("%d", &opcion);
     }while(opcion!=1 && opcion!=2 && opcion!=3);
+    system("@cls||clear");
     texto *swap;
     //mayor a menor
     if(opcion==1){
@@ -442,6 +445,7 @@ void mostrar_genero(HashMap*Map_genero){
             }
         }
     }
+    printf("TITULO                     VALORACION\n");
     for (int j=0; j<control-1; j++){
         printf("%s",get_titulo(vector2[j]));
             for (int k=0; k<27-strlen(get_titulo(vector2[j])); k++){

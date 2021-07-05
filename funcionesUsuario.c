@@ -72,7 +72,6 @@ void crearUsuario(FILE*texto){
     strcat(cadena,contrasena);
     strcat(cadena,";");
     strcat(cadena,"\n");
-
     
     char*linea;
     char*ptr;
@@ -114,6 +113,7 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
     char*ptr;
     if (get_file_size(texto)==0){
         printf ("Por favor cree un usuario primero\n");
+        return NULL;
     }
     else{
         texto = fopen("usuarios.csv", "r");
@@ -160,7 +160,7 @@ char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_gener
     if (opcion == 3) fp = fopen ("comics.csv", "r");
     texto * auxTexto;
     //system("pause");
-    //system("@cls||clear");
+    system("@cls||clear");
     char *linea,*ptr;  
     while (!feof(fp) ){
         linea = (char *) calloc(10000,sizeof(char));

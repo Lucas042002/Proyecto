@@ -10,7 +10,7 @@ typedef struct vLector vLector;
 
 
 usuario* crear_usuario(char *x);
-vLector* crear_valoracion(char*a, char*b,char*c,int d);
+vLector* crear_valoracion(char*a, char*b,char*c,float d);
 void agregar_lista (usuario*user, vLector*val);
 texto* crear_texto (char*titulo,float valoracion, char*autor,char*genero,char*sinopsis);
 void mostrarUser(usuario *user);

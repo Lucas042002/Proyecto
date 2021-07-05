@@ -44,7 +44,7 @@ void menuRecomendacion(usuario*user){
             case 2: mostrar_afinidad(Map_genero,user,Map_titulo,tipoLec);break;
             case 3: mostrarPorValoracion(Map_titulo);break;
             case 4: Buscar_Titulo(Map_titulo);break;
-            case 5: buscar_autor(Map_titulo,Map_autor);break;
+            case 5: buscar_autor(Map_autor);break;
             case 6: mostrar_genero(Map_genero);break;
             case 7: agregarTexto(Map_genero,Map_autor,Map_titulo,tipoLec);break;
             case 0: break;
