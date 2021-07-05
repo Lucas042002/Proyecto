@@ -73,6 +73,7 @@ void mostrarUser(usuario *user){
 void mostrarVal(usuario *user){
     vLector*aux=malloc(sizeof(vLector));
     aux=first(user->valoracionLecturas);
+    //muestra todas las valoraciones guardadas en la lista del user
     printf("Valoraciones del Usuario:\n");
     while(aux!=NULL){
         printf("Tipo de lectura = %s\n", aux->tipoLectura);
@@ -106,12 +107,14 @@ void mostrarPorValoracion(HashMap *map){
   texto *vector = malloc(sizeof(texto)*get_size(map));
   texto *vectorMapa = firstMap(map);
   int cont = 0;
+  //guardo los datos del mapa en un vector de tipo texto
   while (vectorMapa != NULL){
     vector[cont] = *vectorMapa;
     cont++;
     vectorMapa = nextMap(map);
   }
   texto swap;
+  //se aplica bubblesort de mayor a menor segun la valoracion
     for (int c = 0 ; c < get_size(map) -1; c++){
         for (int d = 0 ; d < get_size(map)- c-1; d++){
             if (vector[d].valoracion < vector[d+1].valoracion){

@@ -146,7 +146,7 @@ void Buscar_Titulo(HashMap*map){
     titulo[strlen(titulo)-1]=0;
     printf("\n");
     auxtitulo=searchMap(map,titulo);
-
+    //se busca en el mapa y no se encuentra se retorna el primer printf en caso contrario se imprimen sus datos
     if(auxtitulo==NULL){
         printf("El titulo que busca no existe en nuestra base de datos\n"); return;
     }
@@ -422,7 +422,7 @@ void mostrar_genero(HashMap*Map_genero){
     system("@cls||clear");
     
     texto *swap;
-    //mayor a menor
+    //bubble sort mayor a menor
     if(opcion==1){
         for (int c = 0 ; c < control -1; c++){
             for (int d = 0 ; d < control- c-1; d++){
@@ -434,7 +434,7 @@ void mostrar_genero(HashMap*Map_genero){
             }
         }
     }
-    //menor a mayor
+    // bubble sort menor a mayor
     if(opcion==2){
         for (int c = 0 ; c < control -1; c++){
             for (int d = 0 ; d < control- c-1; d++){
