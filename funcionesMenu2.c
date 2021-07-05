@@ -67,19 +67,14 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         char *linea;
         char * linea2;
         char *ptr, *ptr2;
-        char *aux2=(char*)malloc(sizeof(char));
         FILE*csv = fopen("usuarios.csv", "r+");
         FILE *copiacsv = fopen("usuarioscopia.csv", "w");
         while (!feof(csv)){
             linea2 = (char *) malloc(50000*sizeof(char));
             fgets(linea2, 50000, csv);
-            ptr = strtok(linea2, "\n");
             if (linea2!=NULL){
-                
                 fputs(linea2,copiacsv);
-                ptr = strtok(NULL, "\n");
             }
-            fputs("\n",copiacsv);
         }
         rewind(csv);
         fclose(copiacsv);
@@ -89,35 +84,34 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
             if(linea){
                 ptr = strtok(linea, ",");
                 if (strcmp(get_nombreUser(user),ptr)==0){
-                    strcat(aux2,ptr);
+                    /*
                     ptr = strtok(NULL, ";");
-                    strcat(aux2,ptr);
                     ptr = strtok(NULL, ",");
                     ptr = strtok(NULL, ",");
                     while(ptr!=NULL){
                         ptr = strtok(NULL, ",");
-                    }
+                    }*/
                         long donde = ftell(csv);
                         donde=donde-2;
                         fseek( csv, donde , SEEK_SET);
                         fprintf(csv,"%s",cadena_usuario);
                         copiacsv = fopen("usuarioscopia.csv", "r+");
-                        fseek( copiacsv, donde+2, SEEK_SET);
+                        fseek(copiacsv, donde+2, SEEK_SET);
+                        fputs("\n",csv);
                         while (!feof(copiacsv)){
-                            fputs("\n",csv);
                             fgets(linea2, 50000, copiacsv);
                             if (linea2!=NULL){
-                                ptr = strtok(linea2, "\n");
                                 fputs(linea2,csv);
                             }
-                            
                         }
+                        
                         fclose(copiacsv);
                         fclose(csv);
                         break;
                 }
             }
         }
+        printf("AA\n");
         //Ingresar en los mapas la valoracion
         float val_fl = atof(val_ingresada);
         float nueva_val;
@@ -214,7 +208,8 @@ void buscar_autor(HashMap*map, HashMap*mapAutor){
         }  
     auxautor=nextMap(map);
     }
-   
+   free (autor);
+   free (auxautor);
 }
 
 void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo, char *tipoLec){
@@ -333,6 +328,12 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
         printf("%.2f \n", get_valoracion(dataRec));
         dataRec=next(recomendacion);
     }
+    free(dataRec);
+    free(recomendacion);
+    for (int i=0; i<200; i++){
+         free(vector[i]);
+    }
+   
 }
 
 void mostrar_genero(HashMap*Map_genero){
@@ -351,8 +352,9 @@ void mostrar_genero(HashMap*Map_genero){
     char* auxGen = malloc (sizeof(char));
     strcpy(auxGen,genero);
     char * ptr = calloc (1000,sizeof(char));
-    ptr=strtok(auxGen, ",\n");                
-    while(ptr!=NULL){
+    ptr=strtok(auxGen, ",\n");  
+    int cont=0;              
+    while(ptr!=NULL && cont<10){
        verdad=0;
        if (a==0) {
            vector[a]=ptr; 
@@ -369,7 +371,8 @@ void mostrar_genero(HashMap*Map_genero){
                 a++;
            }   
        }
-       ptr=strtok(NULL, ", \n");  
+       ptr=strtok(NULL, ", \n"); 
+       cont++; 
     }
         texto* vector2[100];
         int control=0;
@@ -439,7 +442,7 @@ void mostrar_genero(HashMap*Map_genero){
             }
         }
     }
-    for (int j=0; j<control; j++){
+    for (int j=0; j<control-1; j++){
         printf("%s",get_titulo(vector2[j]));
             for (int k=0; k<27-strlen(get_titulo(vector2[j])); k++){
             printf(" ");
@@ -447,6 +450,7 @@ void mostrar_genero(HashMap*Map_genero){
         printf("%.2f \n",get_valoracion(vector2[j]));
     }
     
+
 }
 
 void agregarTexto(HashMap *Map_genero, HashMap* Map_autor, HashMap *Map_titulo, char*tipo){

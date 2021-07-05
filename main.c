@@ -18,7 +18,9 @@ void menuRecomendacion(usuario*user){
     mostrarVal(user);
     char* tipoLec = malloc (sizeof(char));
     printf("\n");
+
     tipoLec = importarTipoLectura(Map_titulo,Map_autor,Map_genero);
+
     int numero = -1;
     while(numero != 0){
         printf("-----------------------------------------\n");

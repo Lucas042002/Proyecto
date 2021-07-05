@@ -29,7 +29,7 @@ void cargarDatosUsuario(char*copyLinea,usuario*user){
         vLector*val;
         char*tipoLectura=(char *)malloc(20*sizeof(char));
         char*titulo=(char *)malloc(50*sizeof(char));
-        char*genero=(char *)malloc(20*sizeof(char));
+        char*genero=(char *)malloc(70*sizeof(char));
         float calificacion=0;
         ptr2=strtok(ptr,",");
         strcpy(tipoLectura,ptr2);
@@ -118,9 +118,9 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
     else{
         texto = fopen("usuarios.csv", "r");
         while (!feof(texto)){
-            linea = (char *) malloc(5000*sizeof(char));
-            fgets(linea, 5000, texto);
-            char*copyLinea=(char *) malloc(5000*sizeof(char));
+            linea = (char *) malloc(10000*sizeof(char));
+            fgets(linea, 10000, texto);
+            char*copyLinea=(char *) malloc(10000*sizeof(char));
             strcpy(copyLinea,linea);
             if(linea){
                 ptr = strtok(linea, ",");
@@ -158,18 +158,17 @@ char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_gener
     if (opcion == 1) fp = fopen ("mangas.csv", "r");
     if (opcion == 2) fp = fopen ("libros.csv", "r");
     if (opcion == 3) fp = fopen ("comics.csv", "r");
-    
     texto * auxTexto;
     //system("pause");
     //system("@cls||clear");
     char *linea,*ptr;  
     while (!feof(fp) ){
-        linea = (char *) calloc(100000,sizeof(char));
-        fgets(linea, 100000, fp);
+        linea = (char *) calloc(10000,sizeof(char));
+        fgets(linea, 10000, fp);
         if( linea ){
             char * titulo    = (char *)calloc(1000,sizeof(char));
             char * autor     = (char *)calloc(1000,sizeof(char));
-            char * sinopsis  = (char *)calloc(10000,sizeof(char));
+            char * sinopsis  = (char *)calloc(1000,sizeof(char));
             char * genero    = (char *)calloc(1000,sizeof(char));
             
             float valoracion;

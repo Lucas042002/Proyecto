@@ -53,8 +53,8 @@ texto* crear_texto (char*titulo,float valoracion, char*autor,char*genero,char*si
 vLector* crear_valoracion(char*a, char*b,char*c,int d){
     vLector *val = (vLector *) malloc (sizeof(vLector));
     val->tipoLectura=(char *)malloc(20*sizeof(char));
-    val->titulo=(char *)malloc(50*sizeof(char));
-    val->genero=(char *)malloc(20*sizeof(char));
+    val->titulo=(char *)malloc(70*sizeof(char));
+    val->genero=(char *)malloc(70*sizeof(char));
 
     strcpy(val->tipoLectura,a);
     strcpy(val->titulo,b);
