@@ -55,7 +55,7 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         strcat(cadena_usuario,"\"");
         strcat(cadena_usuario,",");
         strcat(cadena_usuario,val_ingresada);
-        strcat(cadena_usuario,"\n");
+
 
         //Ingresarlo en el usuarios.csv y la lectura.csv
         char *linea;
@@ -63,26 +63,19 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         char *ptr, *ptr2;
         FILE*csv = fopen("usuarios.csv", "r+");
         FILE *copiacsv = fopen("usuarioscopia.csv", "w");
-        fseek(csv, 0L, SEEK_END);
-        int i=ftell(csv);
-        rewind(csv);
-        int j=0;
-        while (j<i-3){
+        while (!feof(csv)){
             linea2 = (char *) malloc(50000*sizeof(char));
             fgets(linea2, 50000, csv);
             if (linea2!=NULL){
-                if(j+strlen(linea2)>=i-3){
-                    linea2[strlen(linea2)-1]=0;
-                }
+                linea2[strlen(linea2)-1]=0;
                 fputs(linea2,copiacsv);
             }
-            j=j+strlen(linea2);
         }
         rewind(csv);
         fclose(copiacsv);
         while (!feof(csv)){
-            linea = (char *) malloc(50000*sizeof(char));
-            fgets(linea, 50000, csv);
+            linea = (char *) malloc(5000*sizeof(char));
+            fgets(linea, 5000, csv);
             if(linea){
                 ptr = strtok(linea, ",");
                 if (strcmp(get_nombreUser(user),ptr)==0){
@@ -93,13 +86,12 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
                         fprintf(csv,"%s",cadena_usuario);
                         copiacsv = fopen("usuarioscopia.csv", "r+");
                         fseek(copiacsv, donde+2, SEEK_SET);
-
+                        fputs("\n",csv);
                         while (!feof(copiacsv)){
                             fgets(linea2, 50000, copiacsv);
                             if (linea2!=NULL){
                                 fputs(linea2,csv);
                             }
-                            
                         }
                         
                         fclose(copiacsv);
@@ -341,7 +333,10 @@ void mostrar_genero(HashMap*Map_genero){
     char*genero=malloc(sizeof(char));
     system("@cls||clear");
     printf("Que genero desea encontrar:\n");
-    scanf("%s", genero);
+    scanf("%[^\n]s", genero);
+    fgets(genero,40,stdin);
+    fgets(genero,40,stdin);
+    genero[strlen(genero)-1]=0;
     char * vector [10];
     for (int l=0;l<10;l++){
          vector[l] = calloc (200, sizeof(char));
@@ -411,15 +406,21 @@ void mostrar_genero(HashMap*Map_genero){
             new=nextMap(Map_genero);
         }
     }
+    if(control==0){
+        printf("No existe el genero ingresado, volviendo al menu...\n");
+        return; 
+    }
     printf("Como desea ver las lecturas?\n");
     printf("1 para mostrar de mayor a menor valoracion.\n");
     printf("2 para mostrar de menor a mayor valoracion.\n");
     printf("3 para no ordenar.\n");
+    
     int opcion;
     do{ 
         scanf("%d", &opcion);
     }while(opcion!=1 && opcion!=2 && opcion!=3);
     system("@cls||clear");
+    
     texto *swap;
     //mayor a menor
     if(opcion==1){
@@ -446,7 +447,7 @@ void mostrar_genero(HashMap*Map_genero){
         }
     }
     printf("TITULO                     VALORACION\n");
-    for (int j=0; j<control-1; j++){
+    for (int j=0; j<control; j++){
         printf("%s",get_titulo(vector2[j]));
             for (int k=0; k<27-strlen(get_titulo(vector2[j])); k++){
             printf(" ");
