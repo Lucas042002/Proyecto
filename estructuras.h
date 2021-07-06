@@ -25,6 +25,8 @@ long get_size (HashMap * map);
 void mostrarPorValoracion(HashMap*Map_titulo);
 int comparar(texto* aComparar, char *aux);
 
+void modificar_user(usuario * user,vLector *a);
+
 char* get_tituloL(vLector*t);
 List* get_valoracionL(usuario * user);
 char* get_generoL(vLector*t);

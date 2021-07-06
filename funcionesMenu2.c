@@ -13,6 +13,7 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
     texto*aux;
     List *auxiliar;
     system("@cls||clear");
+    //Se ingresa titulo de lectura a valorar
     printf("Escriba el nombre de la lectura a valorar \n");
     do{
         
@@ -21,12 +22,14 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         fgets(titulo_ingresado,40,stdin);
         fgets(titulo_ingresado,40,stdin);
         titulo_ingresado[strlen(titulo_ingresado)-1]=0;
+        //corroboramos que el titulo exista en nuestra base de datos
         aux = searchMap(Map_titulo,titulo_ingresado);
         vLector* auxTexto;
         if (aux==NULL) {
             printf ("No se encontro el titulo ingresado,retornando al menu.\n");
             return;
         }
+        //corroboramos que no haya sido valorado anteriormente
         auxiliar = get_valoracionL(user);
         auxTexto = first(auxiliar);
         while (auxTexto!=NULL){
@@ -38,8 +41,10 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         }
         
     }while (aux==NULL);
+    //Pedimos una valoracion a este titulo
     printf ("Escriba la valoracion, recuerde que puede valorar desde el 1 al 10.\n");
     scanf("%s",val_ingresada);
+          float val_fl = atof(val_ingresada);
 
         //Ingresar la valoracion en el usuario//
         char*cadena_usuario=(char *)malloc(1000*sizeof(char));
@@ -55,14 +60,15 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
         strcat(cadena_usuario,"\"");
         strcat(cadena_usuario,",");
         strcat(cadena_usuario,val_ingresada);
+        vLector * auxiliar2 = crear_valoracion(tipoLec, titulo, genero, val_fl);
 
-
-        //Ingresarlo en el usuarios.csv y la lectura.csv
+        //Para ingresarlos en csv usuarios
         char *linea;
         char * linea2;
         char *ptr, *ptr2;
         FILE*csv = fopen("usuarios.csv", "r+");
         FILE *copiacsv = fopen("usuarioscopia.csv", "w");
+        //Creamos una copia del csv actual
         while (!feof(csv)){
             linea2 = (char *) malloc(50000*sizeof(char));
             fgets(linea2, 50000, csv);
@@ -79,7 +85,7 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
             if(linea){
                 ptr = strtok(linea, ",");
                 if (strcmp(get_nombreUser(user),ptr)==0){
-
+                        //Ingresamos la valoracion al usuario
                         long donde = ftell(csv);
                         donde=donde-2;
                         fseek( csv, donde , SEEK_SET);
@@ -87,6 +93,8 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
                         copiacsv = fopen("usuarioscopia.csv", "r+");
                         fseek(copiacsv, donde+2, SEEK_SET);
                         fputs("\n",csv);
+                        //copiamos todo lo posterior, ya que se elimina en el
+                        //csv original despues de agregar la valoracion
                         while (!feof(copiacsv)){
                             fgets(linea2, 50000, copiacsv);
                             if (linea2!=NULL){
@@ -100,8 +108,9 @@ void Ingresar_valoracion(usuario*user,char*tipoLec,HashMap*Map_titulo,HashMap*Ma
                 }
             }
         }
+        //Ingresar en la estructura usuario la nueva valoracion
+        modificar_user(user,auxiliar2);
         //Ingresar en los mapas la valoracion
-        float val_fl = atof(val_ingresada);
         float nueva_val;
         nueva_val = (get_valoracion(aux)*0.95) + (val_fl*0.05);
         modificar_val(aux,nueva_val);
@@ -208,27 +217,53 @@ void buscar_autor(HashMap*mapAutor){
 
 void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo, char *tipoLec){
     system("@cls||clear");
+vLector* txt;
+    //Importamos a la funcion las valoraciones actuales del user
     List * valoraciones = get_valoracionL(user);
-    if (valoraciones==NULL) return;
+    //si no tiene, se retorna porque no tendria sentido la funcion
+    if (valoraciones==NULL) {
+        printf("El usuario de sesion activa no tiene valoraciones. Ingrese previamente al menos una valoracion.\n");
+        return;
+    }
+    int almenos =0;
+txt = first(valoraciones);
+    while(txt!=NULL){
+        if(strcmp(get_TipoL(txt),tipoLec)==0){
+            almenos=1;
+            break;
+        }
+        txt=next(valoraciones);
+    }
+    if (almenos==0){
+        printf("El usuario de sesion activa no tiene valoraciones de este tipo de lectura. Ingrese previamente al menos una valoracion.\n");
+        return;
+    }
+    //creamos una lista donde almacenaremos los titulos recomendados
     List * recomendacion = createList();
-    char * vector [200];
-    for (int l=0;l<200;l++){
+    //creamos un vector donde guardaremos los generos 
+    char * vector [20];
+    for (int l=0;l<20;l++){
          vector[l] = calloc (200, sizeof(char));
     }
     char* auxTipo= malloc (sizeof(char));
     
     int verdad;
-    
-    vLector* txt = first(valoraciones);
+    //accedemos a los textos valorados por el usuario actualmente
+     txt = first(valoraciones);
     int a=0;
+    //accedemos al tipo de lectura del primer texto valorado
     auxTipo = get_TipoL (txt);
     while(txt!=NULL){    
+        //si el tipo de texto coindice, corroboramos la calificacion
         if (strcmp(auxTipo,tipoLec)==0){
             float calificacion = get_calificacion(txt);
             char* auxGen = malloc (sizeof(char));
             char * ptr = calloc (1000,sizeof(char));
-            if (calificacion>5){
-                auxGen=get_generoL(txt);               
+            //si la calificacion es mayor o igual a 6, accedemos a los generos de la valoracion
+            if (calificacion>=6){
+                auxGen=get_generoL(txt);     
+                //agregamos el primer genero y analizamos desde el segundo genero en adelante 
+                //si ya esta escrito en nuestro vector          
                 ptr=strtok(auxGen, ",");                
                 while(ptr!=NULL){
                     verdad=0;
@@ -243,6 +278,7 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
                             }  
                         }
                         if (verdad==0){
+                            //si no esta escrito, escribimos en el vector
                              strcpy(vector[a],ptr);
                              
                              a++;
@@ -256,6 +292,9 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
     }
 
     for (int m=0; m<a;m++){ 
+        //por cada genero guardado en el vector
+        //buscaremos un titulo con una calificacion mayor a 8
+        //corroborando si no esta ya escrito en la lista
         texto * new = firstMap(Map_genero);
         char* auxGen1 = calloc (1000000,sizeof(char));
         char * ptr1 = calloc (1000,sizeof(char));
@@ -302,8 +341,9 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
             new= nextMap(Map_genero);
         }
         if (get_sizelist(recomendacion)>15) break;
+        //la lista contendra un maximo de 15 titulos diferentes
     }
-   
+   //mostramos las recomendaciones
     printf("Nuestras recomendaciones para la sesion en curso son: \n");
     printf("TITULO                     AUTOR                  GENERO                                                      VALORACION\n");
     texto * dataRec=first(recomendacion);
@@ -323,25 +363,23 @@ void mostrar_afinidad (HashMap *Map_genero, usuario * user, HashMap *Map_titulo,
         printf("%.2f \n", get_valoracion(dataRec));
         dataRec=next(recomendacion);
     }
-    free(dataRec);
-    free(recomendacion);
-    for (int i=0; i<200; i++){
-         free(vector[i]);
-    }
+    
    
 }
 
 void mostrar_genero(HashMap*Map_genero){
     char*genero=malloc(sizeof(char));
     system("@cls||clear");
+    //Solicitamos especificar que genero desea encontrar
     printf("Que genero desea encontrar:\n");
     scanf("%[^\n]s", genero);
-    fgets(genero,40,stdin);
-    fgets(genero,40,stdin);
+    fgets(genero,400,stdin);
+    fgets(genero,400,stdin);
     genero[strlen(genero)-1]=0;
     char * vector [10];
+    //creamos un vector de maximo 10 generos distintos
     for (int l=0;l<10;l++){
-         vector[l] = calloc (200, sizeof(char));
+         vector[l] = calloc (100, sizeof(char));
     }
     char* auxTipo= malloc (sizeof(char));
     
@@ -353,6 +391,8 @@ void mostrar_genero(HashMap*Map_genero){
     char * ptr = calloc (1000,sizeof(char));
     ptr=strtok(auxGen, ",\n");  
     int cont=0;              
+    //agregamos el primer genero y analizamos desde el segundo genero en adelante 
+     //si ya esta escrito en nuestro vector, para que todos sean distintos      
     while(ptr!=NULL && cont<10){
        verdad=0;
        if (a==0) {
@@ -373,6 +413,7 @@ void mostrar_genero(HashMap*Map_genero){
        ptr=strtok(NULL, ", \n"); 
        cont++; 
     }
+    //creamos un vector de maximo 100 titulos que coincidan con uno o mas de los generos
         texto* vector2[100];
         int control=0;
     for (int m=0; m<a;m++){
@@ -380,7 +421,8 @@ void mostrar_genero(HashMap*Map_genero){
     texto * new = firstMap(Map_genero);
     char* auxGen1 = calloc (1000000,sizeof(char));
     char * ptr1 = calloc (1000,sizeof(char));
-        
+        //buscamos recorriendo el mapa manualmente
+        //los titulos que coincidan con alguno o todos los generos
         while (new!=NULL){
             strcpy(auxGen1,get_key(Map_genero));
             ptr1= strtok(auxGen1, ",\n");
@@ -392,6 +434,7 @@ void mostrar_genero(HashMap*Map_genero){
                             control++;
                         }
                         else{
+                            //si el titulo ya esta escrito no lo volveremos a escribir
                             for(int k=0;k<control;k++){
                                 if(strcmp(get_titulo(vector2[k]),get_titulo(new))==0){
                                     repetido2=1;
@@ -408,10 +451,13 @@ void mostrar_genero(HashMap*Map_genero){
             new=nextMap(Map_genero);
         }
     }
+    //si nunca se agrego ningun titulo, no existe el genero
     if(control==0){
+
         printf("No existe el genero ingresado, volviendo al menu...\n");
         return; 
     }
+    //si tiene titulos agregados, preguntamos si ordenamos o no estos 
     printf("Como desea ver las lecturas?\n");
     printf("1 para mostrar de mayor a menor valoracion.\n");
     printf("2 para mostrar de menor a mayor valoracion.\n");

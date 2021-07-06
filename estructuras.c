@@ -126,11 +126,15 @@ void mostrarPorValoracion(HashMap *map){
     }
     printf("VALORACION\tTITULO\n");
     for(int l=0;l<cont;l++){
+        char * titulo = calloc(10000,sizeof(char));
+        titulo=vector[l].titulo;
          printf ("%.2f\t\t%s\n",vector[l].valoracion, vector[l].titulo);
     }
 
 }
-
+void modificar_user(usuario * user,vLector *a){
+    pushBack(user->valoracionLecturas,a);
+}
 
 char* get_tituloL(vLector*t){
     return(t->titulo);
