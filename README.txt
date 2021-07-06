@@ -8,7 +8,8 @@ Para valores no númericos el programa presenta bucles infinitos en el menú, da
 
 Para el ingreso de usuarios, este no puede tener espacios ni caracteres exclusivos de la lengua espanola. Lo mismo aplica para la contrasena.
 
-Para la búsqueda de titulos, deben ser ingresados los parámetros de búsqueda exactamente como es requerido. Ejemplo: Si va a buscar la obra "Chainsaw Man", tiene que escribirlo de esa manera con las letras capitalizadas, esto tambien aplica para la la busqueda por autor.
+Para la búsqueda de titulos, deben ser ingresados los parámetros de búsqueda exactamente como es requerido. Ejemplo: Si va a buscar la obra "Chainsaw Man" (no incluir las comillas)
+, tiene que escribirlo de esa manera con las letras capitalizadas, esto tambien aplica para la la busqueda por autor.
 
 Para la busqueda de generos, debe ingresar el genero en minuscula, y si va a hacerlo con dos a la vez, tiene que separarlos con una coma. Ejemplo: "drama,romance" o "accion" (no incluir las comillas)
 
