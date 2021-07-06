@@ -178,10 +178,12 @@ void buscar_autor(HashMap*mapAutor){
     fgets(autor,40,stdin);
     fgets(autor,40,stdin);
     autor[strlen(autor)-1]=0;
+    //Se busca al autor en el mapa autor, para ver en un principio si se encuentran
     if(searchMap(mapAutor,autor)==NULL){
         printf("El autor ingresado no se encuentra en nuestra base de datos\n");
         return;
     }
+    //Si se encuentran, se imprimen
     auxautor=firstMap(mapAutor);
     printf("Obras pertenecientes al autor ingresado : \n ");
     printf("\n");
@@ -459,65 +461,66 @@ void mostrar_genero(HashMap*Map_genero){
 }
 
 void agregarTexto(HashMap *Map_genero, HashMap* Map_autor, HashMap *Map_titulo, char*tipo){
-            char * titulo    = (char *)calloc(1000,sizeof(char));
-            char * autor     = (char *)calloc(1000,sizeof(char));
-            char * sinopsis  = (char *)calloc(10000,sizeof(char));
-            char * genero    = (char *)calloc(1000,sizeof(char));
-            char * valoracion= (char *)calloc(20,sizeof(char));
+    char * titulo    = (char *)calloc(1000,sizeof(char));
+    char * autor     = (char *)calloc(1000,sizeof(char));
+    char * sinopsis  = (char *)calloc(10000,sizeof(char));
+    char * genero    = (char *)calloc(1000,sizeof(char));
+    char * valoracion= (char *)calloc(20,sizeof(char));
+    //Se busca el nombre del titulo
+    printf("Ingrese titulo de Lectura a Ingresar. Recuerde que este tipo de lectura debe corresponder a %s\n", tipo);
+    scanf("%[^\n]", titulo);
+    fgets(titulo,100,stdin);
+    fgets(titulo,100,stdin);
+    titulo[strlen(titulo)-1]=0;
+    if (searchMap(Map_titulo, titulo)!=NULL){
+        printf("Titulo ya existente, retornando a menu...\n");
+        return;
+    }
+    //Si no se encuentra el texto, se piden los demas datos para ingresarlos
+    printf("Ingrese genero de lectura ingresada. Si es mas de un genero ingresar separados por comas y sin espacios, por favor:\n");
+    scanf("%s", genero);
+    printf("Ingrese autor de lectura ingresada:\n");
+    scanf("%[^\n]", autor);
+    fgets(autor,10000,stdin);
+    fgets(autor,10000,stdin);
+    autor[strlen(autor)-1]=0;
+    printf("Ingrese valoracion  de lectura ingresada:\n");
+    scanf("%s", valoracion);
+    printf("Ingrese sinopsis. Sin saltos de linea (ENTER) hasta llegar al final de esta:\n");
+    scanf("%[^\n]", sinopsis);
+    fgets(sinopsis,10000,stdin);
+    fgets(sinopsis,10000,stdin);
+    sinopsis[strlen(sinopsis)-1]=0;
+    texto * auxTexto;
+    float valoracion2= atof(valoracion);
+    auxTexto = crear_texto(titulo,valoracion2, autor, genero, sinopsis);
 
-                printf("Ingrese titulo de Lectura a Ingresar. Recuerde que este tipo de lectura debe corresponder a %s\n", tipo);
-                scanf("%[^\n]", titulo);
-                fgets(titulo,100,stdin);
-                fgets(titulo,100,stdin);
-                titulo[strlen(titulo)-1]=0;
-                if (searchMap(Map_titulo, titulo)!=NULL){
-                    printf("Titulo ya existente, retornando a menu...\n");
-                    return;
-                }
-                printf("Ingrese genero de lectura ingresada. Si es mas de un genero ingresar separados por comas y sin espacios, por favor:\n");
-                scanf("%s", genero);
-                printf("Ingrese autor de lectura ingresada:\n");
-                scanf("%[^\n]", autor);
-                fgets(autor,10000,stdin);
-                fgets(autor,10000,stdin);
-                autor[strlen(autor)-1]=0;
-                printf("Ingrese valoracion  de lectura ingresada:\n");
-                scanf("%s", valoracion);
-                printf("Ingrese sinopsis. Sin saltos de linea (ENTER) hasta llegar al final de esta:\n");
-                scanf("%[^\n]", sinopsis);
-                fgets(sinopsis,10000,stdin);
-                fgets(sinopsis,10000,stdin);
-                sinopsis[strlen(sinopsis)-1]=0;
-                texto * auxTexto;
-                float valoracion2= atof(valoracion);
-                auxTexto = crear_texto(titulo,valoracion2, autor, genero, sinopsis);
-               
-                //insercion en mapa titulo
-                insertMap (Map_titulo,titulo,auxTexto);
-                insertMap(Map_genero,genero,auxTexto);
-                insertMap(Map_autor, autor, auxTexto);
-                char * linea = (char*) calloc (100000, sizeof(char));
-                FILE * fp= NULL;
-                if (strcmp(tipo,"Mangas")==0) fp = fopen ("mangas.csv", "a");
-                if (strcmp(tipo,"Libros")==0) fp = fopen ("libros.csv", "a");
-                if (strcmp(tipo,"Comics")==0) fp = fopen ("comics.csv", "a");
-
-                strcat(linea, titulo);
-                strcat(linea, ",");
-                strcat(linea, "\"");
-                strcat(linea, genero);
-                strcat(linea, "\"");
-                strcat(linea, ",");
-                strcat(linea, autor);
-                strcat(linea, ",");
-                strcat(linea, valoracion);
-                strcat(linea, ",");
-                strcat(linea, "\"");
-                strcat(linea, sinopsis);
-                strcat(linea, "\"");
-                strcat(linea, "\n");
-                fprintf(fp,"%s",linea);
-                printf("\nTexto agregado correctamente.\n");
-                fclose(fp);
+    //insercion en mapa titulo
+    insertMap (Map_titulo,titulo,auxTexto);
+    insertMap(Map_genero,genero,auxTexto);
+    insertMap(Map_autor, autor, auxTexto);
+    char * linea = (char*) calloc (100000, sizeof(char));
+    FILE * fp= NULL;
+    if (strcmp(tipo,"Mangas")==0) fp = fopen ("mangas.csv", "a");
+    if (strcmp(tipo,"Libros")==0) fp = fopen ("libros.csv", "a");
+    if (strcmp(tipo,"Comics")==0) fp = fopen ("comics.csv", "a");
+    //Con esto se crea la linea donde se guardara el csv
+    strcat(linea, titulo);
+    strcat(linea, ",");
+    strcat(linea, "\"");
+    strcat(linea, genero);
+    strcat(linea, "\"");
+    strcat(linea, ",");
+    strcat(linea, autor);
+    strcat(linea, ",");
+    strcat(linea, valoracion);
+    strcat(linea, ",");
+    strcat(linea, "\"");
+    strcat(linea, sinopsis);
+    strcat(linea, "\"");
+    strcat(linea, "\n");
+    fprintf(fp,"%s",linea);
+    printf("\nTexto agregado correctamente.\n");
+    fclose(fp);
                 
 }

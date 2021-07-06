@@ -20,7 +20,7 @@ int get_file_size (FILE *fp) {
 }
 void cargarDatosUsuario(char*copyLinea,usuario*user){
     char *ptr, *ptr2;
-
+    /*Se cargan los datos desde el csv, creando la struct valoracion que se guardara en la list de la struct usuario*/
     ptr = strtok(copyLinea, ";");
     ptr = strtok(NULL, "\n");
     
@@ -42,6 +42,7 @@ void cargarDatosUsuario(char*copyLinea,usuario*user){
         val=crear_valoracion(tipoLectura,titulo,genero,calificacion);
         agregar_lista(user,val);
         ptr2=strtok(NULL,",");
+        //Si llega a tener mas de una valoracion se sigue leyendo hasta que el ptr sea NULL
         while (ptr2!=NULL){
             strcpy(tipoLectura,ptr2);
             ptr2=strtok(NULL,",");
@@ -72,7 +73,7 @@ void crearUsuario(FILE*texto){
     strcat(cadena,contrasena);
     strcat(cadena,";");
     strcat(cadena,"\n");
-    
+    //Se pide el Nombre y contrasena y luego se revisa si el csv usuarios esta vacio, si esta vacio se agrega y si no se revisa que el nombre no este
     char*linea;
     char*ptr;
     if (get_file_size(texto)==0){
@@ -107,9 +108,9 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
 
     printf("Ingrese nombre de usuario:\n");
     scanf ("%s", nombre_usuario);
-
+    //Primero se pide el nombre de usuario
     char*linea;
-    
+    //Se revisa que hayan usuarios creados
     char*ptr;
     if (get_file_size(texto)==0){
         printf ("Por favor cree un usuario primero\n");
@@ -127,6 +128,8 @@ usuario* ingresarUsuario(FILE*texto,usuario*user){
                 if (strcmp(nombre_usuario,ptr)==0){
                     ptr = strtok(NULL, ";");
                     while (intento!=3){
+                        /*Cuando ingrese la contrasena mas de 3 veces fallidas, se retoenara al menu, sino se cargaran los datos del csv
+                        con los datos de si ha valorado alguna obra*/
                         printf("Ingrese contrasenya:\n");
                         scanf ("%s", contrasena);
                         if (strcmp(contrasena,ptr)==0){
@@ -159,8 +162,8 @@ char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_gener
     if (opcion == 2) fp = fopen ("libros.csv", "r");
     if (opcion == 3) fp = fopen ("comics.csv", "r");
     texto * auxTexto;
-    //system("pause");
     system("@cls||clear");
+    //Cuando se selecciona el tipo de lectura que se quiera, se crean las struct texto y se guardan en los distintos mapas, con distintas claves
     char *linea,*ptr;  
     while (!feof(fp) ){
         linea = (char *) calloc(10000,sizeof(char));
@@ -196,6 +199,7 @@ char* importarTipoLectura(HashMap*Map_titulo,HashMap*Map_autor,HashMap*Map_gener
             }
         }
     }
+    //Por ultimo se retorna el tipo de texto que se selecciono para otros usos dentro de la ejecucion
     if (opcion==1) return "Mangas";
     if (opcion==2) return "Libros";
     if (opcion==3) return "Comics";

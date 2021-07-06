@@ -10,6 +10,7 @@
 #include "funcionesMenu2.h"
 
 void menuRecomendacion(usuario*user){
+    //Se inicializan los mapas y se rellenan antes de pasar al mapa
     HashMap*Map_titulo=createMap(100);
     HashMap*Map_autor=createMap(50);
     HashMap*Map_genero=createMap(50);
@@ -58,7 +59,6 @@ int main (){
     FILE * texto = fopen ("usuarios.csv", "r");
     int numero = -1;
     usuario*user=NULL;
-    //char*nombre;
     while(numero != 0){
         
         printf("-----------------------------------------\n");
@@ -80,7 +80,7 @@ int main (){
                 user = ingresarUsuario(texto,user);
                 
                 if (user!=NULL) {
-                    //system("pause");
+
                     system("@cls||clear");
                     menuRecomendacion (user);
                     return 0;
